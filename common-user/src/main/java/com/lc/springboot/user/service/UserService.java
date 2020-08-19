@@ -1,6 +1,7 @@
 package com.lc.springboot.user.service;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.ListUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lc.springboot.common.auth.AuthProperties;
@@ -103,6 +104,8 @@ public class UserService extends ServiceImpl<UserMapper, User> {
       List<PrivilegeLoginDetailResponse> privilegeList =
           privilegeMapper.getPrivilegeListByRoleIds(roleIdList);
       result.setPrivilegeList(privilegeList);
+    } else {
+      result.setPrivilegeList(ListUtil.empty());
     }
 
     if (CollectionUtil.isNotEmpty(result.getPrivilegeList())) {
@@ -114,6 +117,8 @@ public class UserService extends ServiceImpl<UserMapper, User> {
       List<MenuLoginDetailResponse> menuList =
           menuMapper.getMenuListByPrivilegeIds(privilegeIdList);
       result.setMenuList(menuList);
+    } else {
+      result.setMenuList(ListUtil.empty());
     }
 
     // 令牌信息

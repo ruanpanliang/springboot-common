@@ -46,6 +46,7 @@ public enum ResultCode {
 
   RECORD_NOT_FOUND(HttpServletResponse.SC_BAD_REQUEST, "Record Not Exists");
 
+
   final int code;
 
   final String msg;
