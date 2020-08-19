@@ -1,0 +1,51 @@
+server:
+  port: 8082
+
+spring:
+  datasource:
+    driverClassName: com.p6spy.engine.spy.P6SpyDriver
+    #mysql8
+    url: jdbc:p6spy:mysql://localhost:3306/lc?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
+    #mysql5
+    #    url: jdbc:mysql://localhost:3306/lc?useUnicode=true&characterEncoding=UTF-8    username: root
+    username: root
+    password: 123456
+    validationQuery: select 1
+    testWhileIdle: true
+  redis:
+    ################### redis 单机版 start ##########################
+    host: 20.26.39.217
+    port: 9201
+    timeout: 6000
+    database: 1
+    lettuce:
+      pool:
+        max-active: 10 # 连接池最大连接数（使用负值表示没有限制）,如果赋值为-1，则表示不限制；如果pool已经分配了maxActive个jedis实例，则此时pool的状态为exhausted(耗尽)
+        max-idle: 8   # 连接池中的最大空闲连接 ，默认值也是8
+        max-wait: 100 # # 等待可用连接的最大时间，单位毫秒，默认值为-1，表示永不超时。如果超过等待时间，则直接抛出JedisConnectionException
+        min-idle: 2    # 连接池中的最小空闲连接 ，默认值也是0
+      shutdown-timeout: 100ms
+    ################### redis 单机版 end ##########################
+#    cluster:
+#      nodes: 192.168.235.127:7000,192.168.235.128:7000,192.168.235.129:7000,192.168.235.127:7001,192.168.235.128:7001,192.168.235.129:7001
+#    timeout: 6000 # 连接超时时间（毫秒）
+#    lettuce:
+#      pool:
+#        max-active: 10 # 连接池最大连接数（使用负值表示没有限制）,如果赋值为-1，则表示不限制；如果pool已经分配了maxActive个jedis实例，则此时pool的状态为exhausted(耗尽)
+#        max-idle: 8   # 连接池中的最大空闲连接 ，默认值也是8
+#        max-wait: 100 # # 等待可用连接的最大时间，单位毫秒，默认值为-1，表示永不超时。如果超过等待时间，则直接抛出JedisConnectionException
+#        min-idle: 2    # 连接池中的最小空闲连接 ，默认值也是0
+#      shutdown-timeout: 100ms
+
+#ftp相关配置
+ftp:
+  host: 172.16.225.142
+  port: 21
+  user: ftptest
+  password: ruanpan123
+  charset: utf-8
+  connection-timeout: 10000
+  so-timeout: 10000
+
+
+

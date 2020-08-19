@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lc.springboot.user.mapper.UserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.lc.springboot.user.model.User">
+        <result column="ID" property="id" />
+        <result column="CREATED_BY" property="createdBy" />
+        <result column="CREATED_TIME" property="createdTime" />
+        <result column="UPDATED_BY" property="updatedBy" />
+        <result column="UPDATED_TIME" property="updatedTime" />
+        <result column="RANDOM_CODE" property="randomCode" />
+        <result column="REVISION" property="revision" />
+        <result column="DELETE_FLAG" property="deleteFlag" />
+        <result column="USER_ACCOUNT" property="userAccount" />
+        <result column="USER_PASSWORD" property="userPassword" />
+        <result column="USER_TYPE" property="userType" />
+        <result column="USER_NAME" property="userName" />
+        <result column="EMAIL" property="email" />
+        <result column="PHONE" property="phone" />
+        <result column="STATUS" property="status" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        ID,
+        CREATED_BY,
+        CREATED_TIME,
+        UPDATED_BY,
+        UPDATED_TIME,
+        RANDOM_CODE,
+        REVISION,
+        DELETE_FLAG,
+        USER_ACCOUNT, USER_PASSWORD, USER_TYPE, USER_NAME, EMAIL, PHONE, STATUS
+    </sql>
+
+</mapper>
