@@ -219,6 +219,7 @@ public class RedisUtil {
       }
       return true;
     } catch (Exception e) {
+      e.printStackTrace();
       StackTraceElement stackTraceElement = e.getStackTrace()[0];
       log.error(
           "set-" + stackTraceElement.getMethodName() + "--" + stackTraceElement.getLineNumber());

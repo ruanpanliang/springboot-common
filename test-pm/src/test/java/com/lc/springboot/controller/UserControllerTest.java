@@ -10,6 +10,7 @@ import com.lc.springboot.common.crypto.Sha256;
 import com.lc.springboot.user.dto.request.UserAddRequest;
 import com.lc.springboot.user.dto.request.UserLoginRequest;
 import com.lc.springboot.user.dto.request.UserUpdateRequest;
+import com.lc.springboot.user.dto.response.UserLoginDetailResponse;
 import com.lc.springboot.user.enums.UserStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
@@ -90,9 +91,13 @@ public class UserControllerTest {
    */
   @Test
   public void testUserLogin() throws Exception {
-    TestResponseBean result = TestUtil.postReq(mockMvc, BASE_PATH + "/login", userLoginRequest);
+    TestResponseBean<UserLoginDetailResponse> result =
+        new TestUtil<UserLoginDetailResponse>()
+            .postReq(
+                mockMvc, BASE_PATH + "/login", userLoginRequest, UserLoginDetailResponse.class);
 
     assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getInfo().getUserAccount()).isEqualTo("e150lotbsb");
     // assertThat(baseBeanResponse.getCode()).isEqualTo(ResultCode.UN_AUTHORIZED);
   }
 
@@ -103,7 +108,9 @@ public class UserControllerTest {
    */
   @Test()
   public void testCreateUserAuthorizeMissing() throws Exception {
-    TestResponseBean result = TestUtil.postReq(mockMvc, BASE_PATH + "/create", userAddRequest);
+    TestResponseBean<UserUpdateRequest> result =
+        new TestUtil<UserUpdateRequest>()
+            .postReq(mockMvc, BASE_PATH + "/create", userAddRequest, UserUpdateRequest.class);
 
     assertThat(result.isSuccess()).isFalse();
     assertThat(result.getCode()).isEqualTo(ResultCode.UN_AUTHORIZED);
@@ -113,8 +120,10 @@ public class UserControllerTest {
   public void testCreateUserPermissionDeniedException() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.add(AuthConstant.AUTHORIZATION_HEADER, "");
-    TestResponseBean result =
-        TestUtil.postReq(mockMvc, BASE_PATH + "/create", userAddRequest, headers);
+    TestResponseBean<UserUpdateRequest> result =
+        new TestUtil<UserUpdateRequest>()
+            .postReq(
+                mockMvc, BASE_PATH + "/create", userAddRequest, headers, UserUpdateRequest.class);
 
     assertThat(result.isSuccess()).isFalse();
     assertThat(result.getCode()).isEqualTo(ResultCode.UN_AUTHORIZED);
@@ -122,25 +131,16 @@ public class UserControllerTest {
 
   @Test
   public void testCreateUserEmptyName() throws Exception {
-    // userAddRequest.setGroupName(null);
+    HttpHeaders headers = new HttpHeaders();
+    headers.add(
+        AuthConstant.AUTHORIZATION_HEADER, "m9v8mli9qcf7zbqtw4ucktoljl9fly2f22f2t46blou6a9g26g");
+    TestResponseBean<UserUpdateRequest> result =
+        new TestUtil<UserUpdateRequest>()
+            .postReq(
+                mockMvc, BASE_PATH + "/create", userAddRequest, headers, UserUpdateRequest.class);
 
-    MvcResult mvcResult =
-        mockMvc
-            .perform(
-                post(BASE_PATH + "/create")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .header(AuthConstant.AUTHORIZATION_HEADER, "test")
-                    .content(objectMapper.writeValueAsBytes(userAddRequest)))
-            .andExpect(status().isOk())
-            .andReturn();
-
-    log.info(mvcResult.getResponse().getContentAsString());
-
-    TestResponseBean baseBeanResponse =
-        objectMapper.readValue(
-            mvcResult.getResponse().getContentAsString(), TestResponseBean.class);
-    assertThat(baseBeanResponse.isSuccess()).isFalse();
-    assertThat(baseBeanResponse.getCode()).isEqualTo(ResultCode.PARAM_VALID_ERROR);
+    assertThat(result.isSuccess()).isFalse();
+    assertThat(result.getCode()).isEqualTo(ResultCode.PARAM_VALID_ERROR);
   }
 
   @Test

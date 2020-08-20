@@ -25,6 +25,9 @@ public class UserLoginDetailResponse implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
+  @ApiModelProperty(value = "用户ID")
+  private Long id;
+
   @ApiModelProperty(value = "用户账号")
   private String userAccount;
 
@@ -37,8 +40,8 @@ public class UserLoginDetailResponse implements Serializable {
   @ApiModelProperty(value = "电子邮件")
   private String email;
 
-  @ApiModelProperty(value = "用户内置ID")
-  private String uId;
+  @ApiModelProperty(value = "用户内置ID,随机码")
+  private String randomCode;
 
   @ApiModelProperty("角色列表")
   private List<RoleLoginDetailResponse> roleList;

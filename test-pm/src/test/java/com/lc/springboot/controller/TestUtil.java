@@ -1,8 +1,15 @@
 package com.lc.springboot.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import lombok.extern.slf4j.Slf4j;
+import org.nustaq.serialization.FSTClazzInfo;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -44,9 +51,9 @@ public class TestUtil<T> {
    * @return {@link MockHttpServletRequestBuilder}
    * @throws JsonProcessingException
    */
-  public static TestResponseBean postReq(MockMvc mockMvc, String path, Object paramObj)
+  public TestResponseBean<T> postReq(MockMvc mockMvc, String path, Object paramObj, Class<T> clazz)
       throws Exception {
-    return getTestResponseBean(mockMvc, path, paramObj, null);
+    return getTestResponseBean(mockMvc, path, paramObj, null, clazz);
   }
 
   /**
@@ -58,13 +65,15 @@ public class TestUtil<T> {
    * @return {@link MockHttpServletRequestBuilder}
    * @throws JsonProcessingException
    */
-  public static TestResponseBean postReq(
-      MockMvc mockMvc, String path, Object paramObj, HttpHeaders httpHeaders) throws Exception {
-    return getTestResponseBean(mockMvc, path, paramObj, httpHeaders);
+  public TestResponseBean<T> postReq(
+      MockMvc mockMvc, String path, Object paramObj, HttpHeaders httpHeaders, Class<T> clazz)
+      throws Exception {
+    return getTestResponseBean(mockMvc, path, paramObj, httpHeaders, clazz);
   }
 
-  private static TestResponseBean getTestResponseBean(
-      MockMvc mockMvc, String path, Object paramObj, HttpHeaders httpHeaders) throws Exception {
+  private TestResponseBean<T> getTestResponseBean(
+      MockMvc mockMvc, String path, Object paramObj, HttpHeaders httpHeaders, Class<T> clazz)
+      throws Exception {
     MockHttpServletRequestBuilder postBuilder =
         getMockHttpServletRequestBuilder(path, paramObj, httpHeaders);
 
@@ -73,13 +82,33 @@ public class TestUtil<T> {
 
     String resultContent = mvcResult.getResponse().getContentAsString();
 
+    print(resultContent);
+    //
+    // TestResponseBean<T> result =
+    //     objectMapper.readValue(resultContent, new TypeReference<TestResponseBean<T>>() {});
+    JavaType javaType =
+        objectMapper.getTypeFactory().constructParametricType(TestResponseBean.class, clazz);
+    TestResponseBean<T> result = objectMapper.readValue(resultContent, javaType);
+
+    return result;
+  }
+
+  /**
+   * 格式化输出JSON字符串
+   *
+   * @return 格式化后的JSON字符串
+   */
+  private static String toPrettyFormat(String json) {
+    JsonObject jsonObject = JsonParser.parseString(json).getAsJsonObject();
+    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    return gson.toJson(jsonObject);
+  }
+
+  private static void print(String resultContent) {
     // 打印响应报文
     System.out.println("-----------------------------------------\n");
-    System.out.println(resultContent);
+    System.out.println(toPrettyFormat(resultContent));
     System.out.println("\n------------------------------------------");
-
-    TestResponseBean result = objectMapper.readValue(resultContent, TestResponseBean.class);
-    return result;
   }
 
   @NotNull

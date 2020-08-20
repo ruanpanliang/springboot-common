@@ -6,6 +6,7 @@ import com.lc.springboot.common.auth.PermissionDeniedException;
 import com.lc.springboot.common.auth.token.AccessTokenUtil;
 import com.lc.springboot.common.holder.RequestUserHolder;
 import com.lc.springboot.common.redis.util.RedisUtil;
+import com.lc.springboot.user.dto.response.UserLoginDetailResponse;
 import com.lc.springboot.user.model.User;
 import jodd.util.StringUtil;
 import lombok.Getter;
@@ -42,7 +43,7 @@ public class UserAuthorizeInterceptor extends AuthorizeInterceptor {
   @Override
   public boolean checkUser(String authzHeader) {
     // 将redis保存的用户信息提取出来
-    User user = (User) accessTokenUtil.currentLoginUserInfo();
+    UserLoginDetailResponse user = (UserLoginDetailResponse) accessTokenUtil.currentLoginUserInfo();
     if (user == null || StringUtils.isEmpty(user.getUserAccount())) {
       throw new PermissionDeniedException(authProperties.getErrorAuthorizationHeader());
     }

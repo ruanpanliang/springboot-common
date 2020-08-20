@@ -1,5 +1,6 @@
 package com.lc.springboot.controller;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.lc.springboot.common.api.ResultCode;
 import io.swagger.annotations.ApiModel;
 import lombok.*;

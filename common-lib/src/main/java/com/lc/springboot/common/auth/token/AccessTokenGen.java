@@ -11,6 +11,10 @@ public class AccessTokenGen {
 
   public static AccessToken genAccessToken(long expires_in) {
 
-    return new AccessToken(RandomUtil.randomString(50), RandomUtil.randomString(50), expires_in);
+    AccessToken accessToken = new AccessToken();
+    accessToken.setAccess_token(RandomUtil.randomString(50));
+    accessToken.setRefresh_token(RandomUtil.randomString(50));
+    accessToken.setExpires_in(expires_in);
+    return accessToken;
   }
 }

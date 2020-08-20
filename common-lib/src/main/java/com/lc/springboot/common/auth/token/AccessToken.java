@@ -5,15 +5,16 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * 令牌对象
  *
  * @author liangchao
  */
 @Data
-@AllArgsConstructor
 @ApiModel(value = "令牌对象")
-public class AccessToken {
+public class AccessToken implements Serializable {
 
   /** 令牌值 */
   @ApiModelProperty(value = "令牌值")

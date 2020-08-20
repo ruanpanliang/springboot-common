@@ -91,7 +91,8 @@ public class UserService extends ServiceImpl<UserMapper, User> {
     result.setUserName(user.getUserName());
     result.setUserType(user.getUserType());
     // 将随机码设置用户编号
-    result.setUId(user.getRandomCode());
+    result.setRandomCode(user.getRandomCode());
+    result.setId(user.getId());
 
     // 获取角色列表
     List<RoleLoginDetailResponse> roleList = roleMapper.getRoleListByUserId(user.getId());
@@ -129,7 +130,7 @@ public class UserService extends ServiceImpl<UserMapper, User> {
     // 删除原来保存在redis中用户信息
     accessTokenUtil.delUserInfo(user.getUserAccount());
     // 保存用户信息到redis中
-    accessTokenUtil.saveUserInfo(accessToken, user, user.getUserAccount());
+    accessTokenUtil.saveUserInfo(accessToken, result, user.getUserAccount());
 
     result.setAccessToken(accessToken);
 
