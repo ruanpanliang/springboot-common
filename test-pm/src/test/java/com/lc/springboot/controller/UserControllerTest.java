@@ -2,7 +2,6 @@ package com.lc.springboot.controller;
 
 import cn.hutool.core.util.RandomUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lc.springboot.common.api.BaseBeanResponse;
 import com.lc.springboot.common.api.BaseListResponse;
 import com.lc.springboot.common.api.BaseResponse;
 import com.lc.springboot.common.api.ResultCode;
@@ -21,12 +20,12 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.nio.charset.Charset;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -47,10 +46,13 @@ public class UserControllerTest {
 
   @Autowired ObjectMapper objectMapper;
 
+  /** 用户新增请求对象 */
   UserAddRequest userAddRequest;
 
+  /** 用户更新请求对象 */
   UserUpdateRequest userUpdateRequest;
 
+  /** 用户登录请求对象 */
   UserLoginRequest userLoginRequest;
 
   @Rule public ExpectedException expectedEx = ExpectedException.none();
@@ -88,66 +90,34 @@ public class UserControllerTest {
    */
   @Test
   public void testUserLogin() throws Exception {
-    MvcResult mvcResult =
-        mockMvc
-            .perform(
-                post(BASE_PATH + "/login")
-                    .contentType(MediaType.APPLICATION_JSON)
-                        .characterEncoding("utf-8")
-                    .content(objectMapper.writeValueAsBytes(userLoginRequest)))
-            .andExpect(status().isOk())
-            .andReturn();
-    mvcResult.getResponse().setCharacterEncoding("utf-8");
+    TestResponseBean result = TestUtil.postReq(mockMvc, BASE_PATH + "/login", userLoginRequest);
 
-    log.info(mvcResult.getResponse().getContentAsString());
-    log.info("------------------------------------------");
-
-    BaseBeanResponse baseBeanResponse =
-        objectMapper.readValue(
-            mvcResult.getResponse().getContentAsString(), BaseBeanResponse.class);
-    assertThat(baseBeanResponse.isSuccess()).isTrue();
-    //assertThat(baseBeanResponse.getCode()).isEqualTo(ResultCode.UN_AUTHORIZED);
+    assertThat(result.isSuccess()).isTrue();
+    // assertThat(baseBeanResponse.getCode()).isEqualTo(ResultCode.UN_AUTHORIZED);
   }
 
+  /**
+   * 测试用户创建，没有登录的情况下
+   *
+   * @throws Exception
+   */
   @Test()
   public void testCreateUserAuthorizeMissing() throws Exception {
-    MvcResult mvcResult =
-        mockMvc
-            .perform(
-                post(BASE_PATH + "/create")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsBytes(userAddRequest)))
-            .andExpect(status().isOk())
-            .andReturn();
+    TestResponseBean result = TestUtil.postReq(mockMvc, BASE_PATH + "/create", userAddRequest);
 
-    log.info(mvcResult.getResponse().getContentAsString());
-
-    BaseBeanResponse baseBeanResponse =
-        objectMapper.readValue(
-            mvcResult.getResponse().getContentAsString(), BaseBeanResponse.class);
-    assertThat(baseBeanResponse.isSuccess()).isFalse();
-    assertThat(baseBeanResponse.getCode()).isEqualTo(ResultCode.UN_AUTHORIZED);
+    assertThat(result.isSuccess()).isFalse();
+    assertThat(result.getCode()).isEqualTo(ResultCode.UN_AUTHORIZED);
   }
 
   @Test
   public void testCreateUserPermissionDeniedException() throws Exception {
-    MvcResult mvcResult =
-        mockMvc
-            .perform(
-                post(BASE_PATH + "/create")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .header(AuthConstant.AUTHORIZATION_HEADER, "")
-                    .content(objectMapper.writeValueAsBytes(userAddRequest)))
-            .andExpect(status().isOk())
-            .andReturn();
+    HttpHeaders headers = new HttpHeaders();
+    headers.add(AuthConstant.AUTHORIZATION_HEADER, "");
+    TestResponseBean result =
+        TestUtil.postReq(mockMvc, BASE_PATH + "/create", userAddRequest, headers);
 
-    log.info(mvcResult.getResponse().getContentAsString());
-
-    BaseBeanResponse baseBeanResponse =
-        objectMapper.readValue(
-            mvcResult.getResponse().getContentAsString(), BaseBeanResponse.class);
-    assertThat(baseBeanResponse.isSuccess()).isFalse();
-    assertThat(baseBeanResponse.getCode()).isEqualTo(ResultCode.UN_AUTHORIZED);
+    assertThat(result.isSuccess()).isFalse();
+    assertThat(result.getCode()).isEqualTo(ResultCode.UN_AUTHORIZED);
   }
 
   @Test
@@ -166,9 +136,9 @@ public class UserControllerTest {
 
     log.info(mvcResult.getResponse().getContentAsString());
 
-    BaseBeanResponse baseBeanResponse =
+    TestResponseBean baseBeanResponse =
         objectMapper.readValue(
-            mvcResult.getResponse().getContentAsString(), BaseBeanResponse.class);
+            mvcResult.getResponse().getContentAsString(), TestResponseBean.class);
     assertThat(baseBeanResponse.isSuccess()).isFalse();
     assertThat(baseBeanResponse.getCode()).isEqualTo(ResultCode.PARAM_VALID_ERROR);
   }
@@ -190,9 +160,9 @@ public class UserControllerTest {
 
     log.info(mvcResult.getResponse().getContentAsString());
 
-    BaseBeanResponse baseBeanResponse =
+    TestResponseBean baseBeanResponse =
         objectMapper.readValue(
-            mvcResult.getResponse().getContentAsString(), BaseBeanResponse.class);
+            mvcResult.getResponse().getContentAsString(), TestResponseBean.class);
     assertThat(baseBeanResponse.isSuccess()).isFalse();
     assertThat(baseBeanResponse.getCode()).isEqualTo(ResultCode.PARAM_VALID_ERROR);
   }
@@ -211,9 +181,9 @@ public class UserControllerTest {
 
     log.info(mvcResult.getResponse().getContentAsString());
 
-    BaseBeanResponse<Map> baseBeanResponse =
+    TestResponseBean<Map> baseBeanResponse =
         objectMapper.readValue(
-            mvcResult.getResponse().getContentAsString(), BaseBeanResponse.class);
+            mvcResult.getResponse().getContentAsString(), TestResponseBean.class);
     assertThat(baseBeanResponse.isSuccess()).isTrue();
 
     // assertThat(baseBeanResponse.getInfo().get("groupName"))
@@ -255,9 +225,9 @@ public class UserControllerTest {
             .andExpect(status().isOk())
             .andReturn();
 
-    BaseBeanResponse baseBeanResponse =
+    TestResponseBean baseBeanResponse =
         objectMapper.readValue(
-            mvcResult.getResponse().getContentAsString(), BaseBeanResponse.class);
+            mvcResult.getResponse().getContentAsString(), TestResponseBean.class);
 
     log.info(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(baseBeanResponse));
 

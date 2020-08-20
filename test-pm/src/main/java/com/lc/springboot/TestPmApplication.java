@@ -11,6 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @date: 2020-08-18 23:06
  * @version 1.0
  */
+
 @SpringBootApplication
 @MapperScan(basePackages = "com.lc.springboot.user.mapper")
 public class TestPmApplication {
