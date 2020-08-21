@@ -2,8 +2,6 @@ package com.lc.springboot.controller;
 
 import cn.hutool.core.util.RandomUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lc.springboot.common.api.BaseListResponse;
-import com.lc.springboot.common.api.BaseResponse;
 import com.lc.springboot.common.api.ResultCode;
 import com.lc.springboot.common.auth.AuthConstant;
 import com.lc.springboot.common.crypto.Sha256;
@@ -12,6 +10,7 @@ import com.lc.springboot.user.dto.request.UserLoginRequest;
 import com.lc.springboot.user.dto.request.UserUpdateRequest;
 import com.lc.springboot.user.dto.response.UserLoginDetailResponse;
 import com.lc.springboot.user.enums.UserStatus;
+import com.lc.springboot.user.model.User;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Rule;
@@ -29,7 +28,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /** Controller基础功能测试 */
@@ -100,7 +99,7 @@ public class UserControllerTest {
    */
   @Test
   public void testUserLogin() throws Exception {
-    TestResponseBean<UserLoginDetailResponse> result =
+    TestBaseBeanResponse<UserLoginDetailResponse> result =
         new TestUtil<UserLoginDetailResponse>()
             .request(
                 mockMvc,
@@ -111,7 +110,6 @@ public class UserControllerTest {
 
     assertThat(result.isSuccess()).isTrue();
     assertThat(result.getInfo().getUserAccount()).isEqualTo(USER_ACCOUNT);
-    // assertThat(baseBeanResponse.getCode()).isEqualTo(ResultCode.UN_AUTHORIZED);
   }
 
   /**
@@ -122,9 +120,8 @@ public class UserControllerTest {
   @Test
   public void testUserLogout() throws Exception {
     HttpHeaders headers = getHttpHeaders(tokenVal);
-    BaseResponse result =
-        new TestUtil()
-            .request(mockMvc, BASE_PATH + "/logout", userLoginRequest, headers, HttpMethod.POST);
+    TestBaseResponse result =
+        new TestUtil().request(mockMvc, BASE_PATH + "/logout", null, headers, HttpMethod.POST);
 
     assertThat(result.isSuccess()).isTrue();
   }
@@ -136,7 +133,7 @@ public class UserControllerTest {
    */
   @Test
   public void testCreateUserAuthorizeMissing() throws Exception {
-    TestResponseBean<UserUpdateRequest> result =
+    TestBaseBeanResponse<UserUpdateRequest> result =
         new TestUtil<UserUpdateRequest>()
             .request(
                 mockMvc,
@@ -157,7 +154,7 @@ public class UserControllerTest {
   @Test
   public void testCreateUserPermissionDeniedException() throws Exception {
     HttpHeaders headers = getHttpHeaders("");
-    TestResponseBean<UserUpdateRequest> result =
+    TestBaseBeanResponse<UserUpdateRequest> result =
         new TestUtil<UserUpdateRequest>()
             .request(
                 mockMvc,
@@ -183,7 +180,7 @@ public class UserControllerTest {
     // userAddRequest.setUserPassword("");
 
     HttpHeaders headers = getHttpHeaders(tokenVal);
-    TestResponseBean<UserUpdateRequest> result =
+    TestBaseBeanResponse<UserUpdateRequest> result =
         new TestUtil<UserUpdateRequest>()
             .request(
                 mockMvc,
@@ -207,7 +204,7 @@ public class UserControllerTest {
     // 设置用户登录账号
     userAddRequest.setUserAccount(RandomUtil.randomString(12));
     HttpHeaders headers = getHttpHeaders(tokenVal);
-    TestResponseBean<UserUpdateRequest> result =
+    TestBaseBeanResponse<UserUpdateRequest> result =
         new TestUtil<UserUpdateRequest>()
             .request(
                 mockMvc,
@@ -220,46 +217,42 @@ public class UserControllerTest {
     assertThat(result.isSuccess()).isTrue();
   }
 
+  /**
+   * 查询用户列表信息
+   *
+   * @throws Exception
+   */
   @Test
   public void testListUserSuccessfully() throws Exception {
-    MvcResult mvcResult =
-        mockMvc
-            .perform(
-                get(BASE_PATH
-                        + "/list/1/2?queryStartDate=2020-07-01 11:03:09&queryEndDate=2020-08-01 12:45:46")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .header(AuthConstant.AUTHORIZATION_HEADER, "11111111"))
-            .andExpect(status().isOk())
-            .andReturn();
+    HttpHeaders headers = getHttpHeaders(tokenVal);
+    TestBaseListResponse<User> result =
+        new TestUtil<User>()
+            .requestList(
+                mockMvc,
+                BASE_PATH
+                    + "/list/1/2?queryStartDate=2020-07-01 11:03:09&queryEndDate=2020-10-01 12:45:46",
+                null,
+                headers,
+                User.class,
+                HttpMethod.GET);
 
-    BaseListResponse baseListResponse =
-        objectMapper.readValue(
-            mvcResult.getResponse().getContentAsString(), BaseListResponse.class);
-    log.info(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(baseListResponse));
-
-    assertThat(baseListResponse.isSuccess()).isTrue();
+    assertThat(result.isSuccess()).isTrue();
   }
 
   @Test
   public void testGetUserSuccessfully() throws Exception {
-    userUpdateRequest.setId(8L);
+    HttpHeaders headers = getHttpHeaders(tokenVal);
+    TestBaseBeanResponse<User> result =
+        new TestUtil<User>()
+            .request(
+                mockMvc,
+                BASE_PATH + "/get/" + userUpdateRequest.getId(),
+                null,
+                headers,
+                User.class,
+                HttpMethod.GET);
 
-    MvcResult mvcResult =
-        mockMvc
-            .perform(
-                get(BASE_PATH + "/get/" + userUpdateRequest.getId())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .header(AuthConstant.AUTHORIZATION_HEADER, "11111111"))
-            .andExpect(status().isOk())
-            .andReturn();
-
-    TestResponseBean baseBeanResponse =
-        objectMapper.readValue(
-            mvcResult.getResponse().getContentAsString(), TestResponseBean.class);
-
-    log.info(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(baseBeanResponse));
-
-    assertThat(baseBeanResponse.isSuccess()).isTrue();
+    assertThat(result.isSuccess()).isTrue();
   }
 
   @Test
@@ -269,7 +262,7 @@ public class UserControllerTest {
         mockMvc
             .perform(
                 get(BASE_PATH + "/get").contentType(MediaType.APPLICATION_JSON).headers(headers))
-            .andExpect(status().isOk())
+            .andExpect(status().is4xxClientError())
             .andReturn();
 
     assertThat("").isEqualTo(mvcResult.getResponse().getContentAsString());
@@ -283,7 +276,7 @@ public class UserControllerTest {
   @Test
   public void testUpdateUserSuccessfully() throws Exception {
     HttpHeaders headers = getHttpHeaders(tokenVal);
-    TestResponseBean<UserUpdateRequest> result =
+    TestBaseBeanResponse<UserUpdateRequest> result =
         new TestUtil<UserUpdateRequest>()
             .request(
                 mockMvc,
@@ -292,6 +285,20 @@ public class UserControllerTest {
                 headers,
                 UserUpdateRequest.class,
                 HttpMethod.PUT);
+
+    assertThat(result.isSuccess()).isTrue();
+  }
+
+  /**
+   * 测试删除用户
+   *
+   * @throws Exception
+   */
+  @Test
+  public void testDeleteUserSuccessfully() throws Exception {
+    HttpHeaders headers = getHttpHeaders(tokenVal);
+    TestBaseResponse result =
+        new TestUtil().request(mockMvc, BASE_PATH + "/delete/5", null, headers, HttpMethod.DELETE);
 
     assertThat(result.isSuccess()).isTrue();
   }

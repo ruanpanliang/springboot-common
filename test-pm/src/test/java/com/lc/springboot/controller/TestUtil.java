@@ -8,7 +8,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.lc.springboot.common.api.BaseResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -19,8 +18,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 
 import javax.validation.constraints.NotNull;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -55,7 +53,7 @@ public class TestUtil<T> {
    * @return {@link MockHttpServletRequestBuilder}
    * @throws JsonProcessingException
    */
-  public BaseResponse request(MockMvc mockMvc, String path, Object paramObj, HttpMethod httpMethod)
+  public TestBaseResponse request(MockMvc mockMvc, String path, Object paramObj, HttpMethod httpMethod)
       throws Exception {
     return getBaseResponse(mockMvc, path, paramObj, null, httpMethod);
   }
@@ -71,17 +69,17 @@ public class TestUtil<T> {
    * @return {@link MockHttpServletRequestBuilder}
    * @throws JsonProcessingException
    */
-  public BaseResponse request(
+  public TestBaseResponse request(
       MockMvc mockMvc, String path, Object paramObj, HttpHeaders httpHeaders, HttpMethod httpMethod)
       throws Exception {
     return getBaseResponse(mockMvc, path, paramObj, httpHeaders, httpMethod);
   }
 
-  private BaseResponse getBaseResponse(
+  private TestBaseResponse getBaseResponse(
       MockMvc mockMvc, String path, Object paramObj, HttpHeaders httpHeaders, HttpMethod httpMethod)
       throws Exception {
     String resultContent = getResult(mockMvc, path, paramObj, httpHeaders, httpMethod);
-    BaseResponse result = objectMapper.readValue(resultContent, BaseResponse.class);
+    TestBaseResponse result = objectMapper.readValue(resultContent, TestBaseResponse.class);
     return result;
   }
 
@@ -122,7 +120,7 @@ public class TestUtil<T> {
    * @return {@link MockHttpServletRequestBuilder}
    * @throws JsonProcessingException
    */
-  public TestResponseBean<T> request(
+  public TestBaseBeanResponse<T> request(
       MockMvc mockMvc, String path, Object paramObj, Class<T> clazz, HttpMethod httpMethod)
       throws Exception {
     return getTestResponseBean(mockMvc, path, paramObj, null, clazz, httpMethod);
@@ -139,7 +137,7 @@ public class TestUtil<T> {
    * @return {@link MockHttpServletRequestBuilder}
    * @throws JsonProcessingException
    */
-  public TestResponseBean<T> request(
+  public TestBaseBeanResponse<T> request(
       MockMvc mockMvc,
       String path,
       Object paramObj,
@@ -150,7 +148,7 @@ public class TestUtil<T> {
     return getTestResponseBean(mockMvc, path, paramObj, httpHeaders, clazz, httpMethod);
   }
 
-  private TestResponseBean<T> getTestResponseBean(
+  private TestBaseBeanResponse<T> getTestResponseBean(
       MockMvc mockMvc,
       String path,
       Object paramObj,
@@ -160,11 +158,70 @@ public class TestUtil<T> {
       throws Exception {
     String resultContent = getResult(mockMvc, path, paramObj, httpHeaders, httpMethod);
     JavaType javaType =
-        objectMapper.getTypeFactory().constructParametricType(TestResponseBean.class, clazz);
-    TestResponseBean<T> result = objectMapper.readValue(resultContent, javaType);
+        objectMapper.getTypeFactory().constructParametricType(TestBaseBeanResponse.class, clazz);
+    TestBaseBeanResponse<T> result = objectMapper.readValue(resultContent, javaType);
 
     return result;
   }
+
+  /** ================================================================================== */
+
+  /**
+   * 设置请求对象信息
+   *
+   * @param mockMvc mockMvc对象
+   * @param path 请求路径
+   * @param paramObj 参数请求对象
+   * @param clazz 封装内容泛型对象（info节点）
+   * @param httpMethod 请求方法
+   * @return {@link MockHttpServletRequestBuilder}
+   * @throws JsonProcessingException
+   */
+  public TestBaseListResponse<T> requestList(
+      MockMvc mockMvc, String path, Object paramObj, Class<T> clazz, HttpMethod httpMethod)
+      throws Exception {
+    return getTestBaseListResponse(mockMvc, path, paramObj, null, clazz, httpMethod);
+  }
+
+  /**
+   * 设置请求对象信息
+   *
+   * @param mockMvc mockMvc对象
+   * @param path 请求路径
+   * @param paramObj 参数请求对象
+   * @param httpHeaders 请求头信息
+   * @param httpMethod 请求方法
+   * @return {@link MockHttpServletRequestBuilder}
+   * @throws JsonProcessingException
+   */
+  public TestBaseListResponse<T> requestList(
+      MockMvc mockMvc,
+      String path,
+      Object paramObj,
+      HttpHeaders httpHeaders,
+      Class<T> clazz,
+      HttpMethod httpMethod)
+      throws Exception {
+    return getTestBaseListResponse(mockMvc, path, paramObj, httpHeaders, clazz, httpMethod);
+  }
+
+  private TestBaseListResponse<T> getTestBaseListResponse(
+      MockMvc mockMvc,
+      String path,
+      Object paramObj,
+      HttpHeaders httpHeaders,
+      Class<T> clazz,
+      HttpMethod httpMethod)
+      throws Exception {
+    String resultContent = getResult(mockMvc, path, paramObj, httpHeaders, httpMethod);
+    JavaType javaType =
+        objectMapper.getTypeFactory().constructParametricType(TestBaseListResponse.class, clazz);
+    TestBaseListResponse<T> result = objectMapper.readValue(resultContent, javaType);
+
+    return result;
+  }
+
+  /** ================================================================================== */
 
   /**
    * 格式化输出JSON字符串
@@ -194,22 +251,28 @@ public class TestUtil<T> {
       String path, Object paramObj, HttpHeaders httpHeaders, HttpMethod httpMethod)
       throws JsonProcessingException {
 
-    MockHttpServletRequestBuilder postBuilder = null;
-    if (httpMethod == HttpMethod.POST) {
-      postBuilder = post(path).contentType(MediaType.APPLICATION_JSON).characterEncoding(UTF8);
+    MockHttpServletRequestBuilder requestBuilder;
+    if (httpMethod == HttpMethod.GET) {
+      requestBuilder = get(path);
+    } else if (httpMethod == HttpMethod.POST) {
+      requestBuilder = post(path);
     } else if (httpMethod == HttpMethod.PUT) {
-      postBuilder = put(path).contentType(MediaType.APPLICATION_JSON).characterEncoding(UTF8);
+      requestBuilder = put(path);
+    } else if (httpMethod == HttpMethod.DELETE) {
+      requestBuilder = delete(path);
     } else {
-      postBuilder = post(path).contentType(MediaType.APPLICATION_JSON).characterEncoding(UTF8);
+      requestBuilder = post(path);
     }
 
+    requestBuilder.contentType(MediaType.APPLICATION_JSON).characterEncoding(UTF8);
+
     if (ObjectUtil.isNotEmpty(paramObj)) {
-      postBuilder.content(objectMapper.writeValueAsBytes(paramObj));
+      requestBuilder.content(objectMapper.writeValueAsBytes(paramObj));
     }
     if (httpHeaders != null) {
-      postBuilder.headers(httpHeaders);
+      requestBuilder.headers(httpHeaders);
     }
-    return postBuilder;
+    return requestBuilder;
   }
 
   @NotNull

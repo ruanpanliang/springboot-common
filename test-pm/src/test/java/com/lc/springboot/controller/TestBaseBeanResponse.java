@@ -5,23 +5,23 @@ import io.swagger.annotations.ApiModel;
 import lombok.*;
 
 /**
- * @program: springboot-common
- * @description: 用于解析返回报文信息
+ * 用于解析返回报文信息
+ *
  * @author: liangc
  * @date: 2020-08-20 10:28
  * @version 1.0
  */
 @ApiModel("测试返回类")
-public class TestResponseBean<T> {
+public class TestBaseBeanResponse<T> {
 
   private String message = "";
   @Builder.Default private ResultCode code = ResultCode.SUCCESS;
   private boolean success;
   private T info;
 
-  public TestResponseBean() {}
+  public TestBaseBeanResponse() {}
 
-  public TestResponseBean(String message, ResultCode code, boolean success, T info) {
+  public TestBaseBeanResponse(String message, ResultCode code, boolean success, T info) {
     this.message = message;
     this.code = code;
     this.success = success;

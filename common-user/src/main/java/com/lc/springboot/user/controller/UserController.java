@@ -1,9 +1,12 @@
 package com.lc.springboot.user.controller;
 
-import com.lc.springboot.common.auth.AuthContext;
+import com.lc.springboot.common.api.BaseBeanResponse;
+import com.lc.springboot.common.api.BaseListResponse;
+import com.lc.springboot.common.api.BaseResponse;
+import com.lc.springboot.common.api.MyPageInfo;
+import com.lc.springboot.common.auth.Authorize;
 import com.lc.springboot.common.auth.token.AccessTokenUtil;
 import com.lc.springboot.common.crypto.Sha256;
-import com.lc.springboot.common.redis.util.RedisUtil;
 import com.lc.springboot.user.dto.request.UserAddRequest;
 import com.lc.springboot.user.dto.request.UserLoginRequest;
 import com.lc.springboot.user.dto.request.UserQueryRequest;
@@ -11,11 +14,6 @@ import com.lc.springboot.user.dto.request.UserUpdateRequest;
 import com.lc.springboot.user.dto.response.UserLoginDetailResponse;
 import com.lc.springboot.user.model.User;
 import com.lc.springboot.user.service.UserService;
-import com.lc.springboot.common.api.BaseBeanResponse;
-import com.lc.springboot.common.api.BaseListResponse;
-import com.lc.springboot.common.api.BaseResponse;
-import com.lc.springboot.common.api.MyPageInfo;
-import com.lc.springboot.common.auth.Authorize;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -25,9 +23,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 /**
  * 用户 控制器

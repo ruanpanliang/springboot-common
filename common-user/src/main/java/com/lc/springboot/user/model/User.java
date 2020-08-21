@@ -1,5 +1,6 @@
 package com.lc.springboot.user.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lc.springboot.common.mybatisplus.model.BaseModel;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -32,6 +33,7 @@ public class User extends BaseModel {
 
     @ApiModelProperty(value = "用户密码")
     @TableField("USER_PASSWORD")
+    @JsonIgnore
     private String userPassword;
 
     @ApiModelProperty(value = "用户类型")
