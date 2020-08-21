@@ -22,12 +22,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -60,7 +59,7 @@ public class UserControllerTest {
 
   private static final String USER_ACCOUNT = "e150lotbsb";
   private static final String USER_PASSWORD = "123456";
-  private static String tokenVal = "kggigcmvchdvlus4mutn0vi8g816dav8c3b88h5g7di7lquaox";
+  private static String tokenVal = "bw7rlvc3etdxxv6w461t5evmih1lcq4vvi03z48r7g7hw8poin";
 
   @Before
   public void setUp() {
@@ -78,14 +77,20 @@ public class UserControllerTest {
             .build();
 
     userUpdateRequest = new UserUpdateRequest();
+    userUpdateRequest.setId(3L);
     userUpdateRequest.setUserName(RandomUtil.randomString(10) + "-update");
-    userUpdateRequest.setUserPassword(Sha256.getSHA256Str("123456"));
     userUpdateRequest.setEmail(
         RandomUtil.randomString(10) + "@" + RandomUtil.randomNumbers(3) + ".com");
     userUpdateRequest.setPhone("1" + RandomUtil.randomNumbers(10));
     userUpdateRequest.setStatus(UserStatus.LOGOUT.getCode());
     userUpdateRequest.setUserType("normal");
     userUpdateRequest.setUserAccount(RandomUtil.randomString(10));
+  }
+
+  private HttpHeaders getHttpHeaders(String tokenVal) {
+    HttpHeaders headers = new HttpHeaders();
+    headers.add(AuthConstant.AUTHORIZATION_HEADER, tokenVal);
+    return headers;
   }
 
   /**
@@ -97,8 +102,12 @@ public class UserControllerTest {
   public void testUserLogin() throws Exception {
     TestResponseBean<UserLoginDetailResponse> result =
         new TestUtil<UserLoginDetailResponse>()
-            .postReq(
-                mockMvc, BASE_PATH + "/login", userLoginRequest, UserLoginDetailResponse.class);
+            .request(
+                mockMvc,
+                BASE_PATH + "/login",
+                userLoginRequest,
+                UserLoginDetailResponse.class,
+                HttpMethod.POST);
 
     assertThat(result.isSuccess()).isTrue();
     assertThat(result.getInfo().getUserAccount()).isEqualTo(USER_ACCOUNT);
@@ -114,14 +123,14 @@ public class UserControllerTest {
   public void testUserLogout() throws Exception {
     HttpHeaders headers = getHttpHeaders(tokenVal);
     BaseResponse result =
-        new TestUtil().postReq(mockMvc, BASE_PATH + "/logout", userLoginRequest, headers);
+        new TestUtil()
+            .request(mockMvc, BASE_PATH + "/logout", userLoginRequest, headers, HttpMethod.POST);
 
     assertThat(result.isSuccess()).isTrue();
-    // assertThat(baseBeanResponse.getCode()).isEqualTo(ResultCode.UN_AUTHORIZED);
   }
 
   /**
-   * 测试用户创建，没有登录的情况下
+   * 测试用户创建，无请求头校验信息
    *
    * @throws Exception
    */
@@ -129,89 +138,86 @@ public class UserControllerTest {
   public void testCreateUserAuthorizeMissing() throws Exception {
     TestResponseBean<UserUpdateRequest> result =
         new TestUtil<UserUpdateRequest>()
-            .postReq(mockMvc, BASE_PATH + "/create", userAddRequest, UserUpdateRequest.class);
+            .request(
+                mockMvc,
+                BASE_PATH + "/create",
+                userAddRequest,
+                UserUpdateRequest.class,
+                HttpMethod.POST);
 
     assertThat(result.isSuccess()).isFalse();
     assertThat(result.getCode()).isEqualTo(ResultCode.UN_AUTHORIZED);
   }
 
+  /**
+   * 测试用户创建，请求头校验信息的值为空
+   *
+   * @throws Exception
+   */
   @Test
   public void testCreateUserPermissionDeniedException() throws Exception {
     HttpHeaders headers = getHttpHeaders("");
     TestResponseBean<UserUpdateRequest> result =
         new TestUtil<UserUpdateRequest>()
-            .postReq(
-                mockMvc, BASE_PATH + "/create", userAddRequest, headers, UserUpdateRequest.class);
+            .request(
+                mockMvc,
+                BASE_PATH + "/create",
+                userAddRequest,
+                headers,
+                UserUpdateRequest.class,
+                HttpMethod.POST);
 
     assertThat(result.isSuccess()).isFalse();
     assertThat(result.getCode()).isEqualTo(ResultCode.UN_AUTHORIZED);
   }
 
+  /**
+   * 测试创建用户，令牌合法，传的参数为后台不能为空的参数
+   *
+   * @throws Exception
+   */
   @Test
   public void testCreateUserEmptyName() throws Exception {
+    // 设置用户账号为空
+    userAddRequest.setUserAccount("");
+    // userAddRequest.setUserPassword("");
+
     HttpHeaders headers = getHttpHeaders(tokenVal);
     TestResponseBean<UserUpdateRequest> result =
         new TestUtil<UserUpdateRequest>()
-            .postReq(
-                mockMvc, BASE_PATH + "/create", userAddRequest, headers, UserUpdateRequest.class);
+            .request(
+                mockMvc,
+                BASE_PATH + "/create",
+                userAddRequest,
+                headers,
+                UserUpdateRequest.class,
+                HttpMethod.POST);
 
     assertThat(result.isSuccess()).isFalse();
     assertThat(result.getCode()).isEqualTo(ResultCode.PARAM_VALID_ERROR);
   }
 
-  private HttpHeaders getHttpHeaders(String tokenVal) {
-    HttpHeaders headers = new HttpHeaders();
-    headers.add(AuthConstant.AUTHORIZATION_HEADER, tokenVal);
-    return headers;
-  }
-
-  @Test
-  public void testCreateUserEmptyWxid() throws Exception {
-    // userAddRequest.setGroupName("qqq");
-    // userAddRequest.setGroupWxid(null);
-
-    MvcResult mvcResult =
-        mockMvc
-            .perform(
-                post(BASE_PATH + "/create")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .header(AuthConstant.AUTHORIZATION_HEADER, "test")
-                    .content(objectMapper.writeValueAsBytes(userAddRequest)))
-            .andExpect(status().isOk())
-            .andReturn();
-
-    log.info(mvcResult.getResponse().getContentAsString());
-
-    TestResponseBean baseBeanResponse =
-        objectMapper.readValue(
-            mvcResult.getResponse().getContentAsString(), TestResponseBean.class);
-    assertThat(baseBeanResponse.isSuccess()).isFalse();
-    assertThat(baseBeanResponse.getCode()).isEqualTo(ResultCode.PARAM_VALID_ERROR);
-  }
-
+  /**
+   * 测试创建用户，成功
+   *
+   * @throws Exception
+   */
   @Test
   public void testCreateUserSuccessfully() throws Exception {
-    MvcResult mvcResult =
-        mockMvc
-            .perform(
-                post(BASE_PATH + "/create")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .header(AuthConstant.AUTHORIZATION_HEADER, "11111")
-                    .content(objectMapper.writeValueAsString(userAddRequest)))
-            .andExpect(status().isOk())
-            .andReturn();
+    // 设置用户登录账号
+    userAddRequest.setUserAccount(RandomUtil.randomString(12));
+    HttpHeaders headers = getHttpHeaders(tokenVal);
+    TestResponseBean<UserUpdateRequest> result =
+        new TestUtil<UserUpdateRequest>()
+            .request(
+                mockMvc,
+                BASE_PATH + "/create",
+                userAddRequest,
+                headers,
+                UserUpdateRequest.class,
+                HttpMethod.POST);
 
-    log.info(mvcResult.getResponse().getContentAsString());
-
-    TestResponseBean<Map> baseBeanResponse =
-        objectMapper.readValue(
-            mvcResult.getResponse().getContentAsString(), TestResponseBean.class);
-    assertThat(baseBeanResponse.isSuccess()).isTrue();
-
-    // assertThat(baseBeanResponse.getInfo().get("groupName"))
-    //     .isEqualTo(userAddRequest.getGroupName());
-    // assertThat(baseBeanResponse.getInfo().get("groupWxid"))
-    //     .isEqualTo(userAddRequest.getGroupWxid());
+    assertThat(result.isSuccess()).isTrue();
   }
 
   @Test
@@ -258,36 +264,35 @@ public class UserControllerTest {
 
   @Test
   public void testGetUserMissingPathVariable() throws Exception {
+    HttpHeaders headers = getHttpHeaders(tokenVal);
     MvcResult mvcResult =
         mockMvc
             .perform(
-                get(BASE_PATH + "/get")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .header(AuthConstant.AUTHORIZATION_HEADER, "111"))
-            .andExpect(status().is4xxClientError())
+                get(BASE_PATH + "/get").contentType(MediaType.APPLICATION_JSON).headers(headers))
+            .andExpect(status().isOk())
             .andReturn();
 
     assertThat("").isEqualTo(mvcResult.getResponse().getContentAsString());
   }
 
+  /**
+   * 测试用户更新
+   *
+   * @throws Exception
+   */
   @Test
   public void testUpdateUserSuccessfully() throws Exception {
-    userUpdateRequest.setId(10L);
+    HttpHeaders headers = getHttpHeaders(tokenVal);
+    TestResponseBean<UserUpdateRequest> result =
+        new TestUtil<UserUpdateRequest>()
+            .request(
+                mockMvc,
+                BASE_PATH + "/update",
+                userUpdateRequest,
+                headers,
+                UserUpdateRequest.class,
+                HttpMethod.PUT);
 
-    MvcResult mvcResult =
-        mockMvc
-            .perform(
-                put(BASE_PATH + "/update")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .header(AuthConstant.AUTHORIZATION_HEADER, "11111111")
-                    .content(objectMapper.writeValueAsString(userUpdateRequest)))
-            .andExpect(status().isOk())
-            .andReturn();
-
-    log.info(mvcResult.getResponse().getContentAsString());
-
-    BaseResponse baseResponse =
-        objectMapper.readValue(mvcResult.getResponse().getContentAsString(), BaseResponse.class);
-    assertThat(baseResponse.isSuccess()).isTrue();
+    assertThat(result.isSuccess()).isTrue();
   }
 }

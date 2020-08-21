@@ -51,7 +51,8 @@ public class GlobalExceptionTranslator {
     logger.warn("Method Argument Not Valid", e);
     BindingResult result = e.getBindingResult();
     FieldError error = result.getFieldError();
-    String message = String.format("%s:%s", error.getField(), error.getDefaultMessage());
+    String message = String.format("%s", error.getDefaultMessage());
+    // String message = String.format("%s:%s", error.getField(), error.getDefaultMessage());
     return BaseResponse.builder().code(ResultCode.PARAM_VALID_ERROR).message(message).build();
   }
 

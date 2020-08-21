@@ -1,5 +1,6 @@
 package com.lc.springboot.user.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lc.springboot.common.mybatisplus.model.BaseModel;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -36,9 +37,10 @@ public class UserUpdateRequest implements Serializable {
     @NotBlank(message = "用户账号不能为空")
     private String userAccount;
 
-    @ApiModelProperty(value = "用户密码", required = true)
-    @NotBlank(message = "用户密码不能为空")
-    private String userPassword;
+    // @ApiModelProperty(value = "用户密码", required = true)
+    // @NotBlank(message = "用户密码不能为空")
+    // @JsonIgnore
+    // private String userPassword;
 
     @ApiModelProperty(value = "用户类型", required = true)
     @NotBlank(message = "用户类型不能为空")

@@ -172,7 +172,7 @@ public class UserService extends ServiceImpl<UserMapper, User> {
     }
 
     user.setUserAccount(userUpdateRequest.getUserAccount());
-    user.setUserPassword(userUpdateRequest.getUserPassword());
+    //user.setUserPassword(userUpdateRequest.getUserPassword());
     user.setUserType(userUpdateRequest.getUserType());
     user.setUserName(userUpdateRequest.getUserName());
     user.setEmail(userUpdateRequest.getEmail());

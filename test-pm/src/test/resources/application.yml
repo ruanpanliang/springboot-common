@@ -1,3 +1,5 @@
+server:
+  port: 8082
 # ****** H2 In Memory Database Connection Info *******
 spring:
   application:
