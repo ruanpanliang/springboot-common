@@ -161,6 +161,7 @@ public class AccessTokenUtil<T> {
    */
   public boolean saveUserInfo(AccessToken accessToken, T user, String userAccount) {
     long expiresIn = authProperties.getAccessTokenValiditySeconds();
+    log.info("expiresIn = " + expiresIn);
     // 保存令牌本身信息
     redisUtil.set(ACCESS_TOKEN + accessToken.getAccess_token(), user, expiresIn);
 

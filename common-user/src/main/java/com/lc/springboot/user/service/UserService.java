@@ -127,12 +127,12 @@ public class UserService extends ServiceImpl<UserMapper, User> {
     long accessTokenValiditySeconds = authProperties.getAccessTokenValiditySeconds();
     // 生成令牌
     AccessToken accessToken = AccessTokenGen.genAccessToken(accessTokenValiditySeconds);
+    result.setAccessToken(accessToken);
     // 删除原来保存在redis中用户信息
     accessTokenUtil.delUserInfo(user.getUserAccount());
+
     // 保存用户信息到redis中
     accessTokenUtil.saveUserInfo(accessToken, result, user.getUserAccount());
-
-    result.setAccessToken(accessToken);
 
     return result;
   }

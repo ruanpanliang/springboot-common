@@ -71,7 +71,7 @@ public class UserController {
   @Authorize({})
   public BaseResponse logout() {
     // 获取当前用户登录信息
-    User user = (User) accessTokenUtil.currentLoginUserInfo();
+    UserLoginDetailResponse user = (UserLoginDetailResponse) accessTokenUtil.currentLoginUserInfo();
     // 删除用户缓存信息
     accessTokenUtil.delUserInfo(user.getUserAccount());
     return BaseResponse.success();

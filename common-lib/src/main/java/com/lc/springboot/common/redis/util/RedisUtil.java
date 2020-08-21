@@ -136,7 +136,7 @@ public class RedisUtil {
    * @return 时间(秒) 返回0代表为永久有效
    */
   public long getExpire(String key) {
-    return redisTemplate.getExpire(key,TimeUnit.SECONDS);
+    return redisTemplate.getExpire(key, TimeUnit.SECONDS);
   }
 
   /**
@@ -202,14 +202,13 @@ public class RedisUtil {
   public boolean set(String key, Object value, long time) {
     try {
       if (time > 0) {
-
         redisTemplate.execute(
             (RedisCallback<Long>)
                 connection -> {
                   // redis info
                   byte[] values = redisObjectSerializer.serialize(value);
                   connection.set(key.getBytes(), values);
-                  connection.expire(key.getBytes(), 60 * time);
+                  connection.expire(key.getBytes(), time);
                   connection.close();
                   return 1L;
                 });

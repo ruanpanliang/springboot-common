@@ -58,10 +58,14 @@ public class UserControllerTest {
 
   @Rule public ExpectedException expectedEx = ExpectedException.none();
 
+  private static final String USER_ACCOUNT = "e150lotbsb";
+  private static final String USER_PASSWORD = "123456";
+  private static String tokenVal = "kggigcmvchdvlus4mutn0vi8g816dav8c3b88h5g7di7lquaox";
+
   @Before
   public void setUp() {
     userLoginRequest =
-        UserLoginRequest.builder().userAccount("e150lotbsb").userPassword("123456").build();
+        UserLoginRequest.builder().userAccount(USER_ACCOUNT).userPassword(USER_PASSWORD).build();
 
     userAddRequest =
         UserAddRequest.builder()
@@ -97,7 +101,22 @@ public class UserControllerTest {
                 mockMvc, BASE_PATH + "/login", userLoginRequest, UserLoginDetailResponse.class);
 
     assertThat(result.isSuccess()).isTrue();
-    assertThat(result.getInfo().getUserAccount()).isEqualTo("e150lotbsb");
+    assertThat(result.getInfo().getUserAccount()).isEqualTo(USER_ACCOUNT);
+    // assertThat(baseBeanResponse.getCode()).isEqualTo(ResultCode.UN_AUTHORIZED);
+  }
+
+  /**
+   * 测试登出
+   *
+   * @throws Exception
+   */
+  @Test
+  public void testUserLogout() throws Exception {
+    HttpHeaders headers = getHttpHeaders(tokenVal);
+    BaseResponse result =
+        new TestUtil().postReq(mockMvc, BASE_PATH + "/logout", userLoginRequest, headers);
+
+    assertThat(result.isSuccess()).isTrue();
     // assertThat(baseBeanResponse.getCode()).isEqualTo(ResultCode.UN_AUTHORIZED);
   }
 
@@ -106,7 +125,7 @@ public class UserControllerTest {
    *
    * @throws Exception
    */
-  @Test()
+  @Test
   public void testCreateUserAuthorizeMissing() throws Exception {
     TestResponseBean<UserUpdateRequest> result =
         new TestUtil<UserUpdateRequest>()
@@ -118,8 +137,7 @@ public class UserControllerTest {
 
   @Test
   public void testCreateUserPermissionDeniedException() throws Exception {
-    HttpHeaders headers = new HttpHeaders();
-    headers.add(AuthConstant.AUTHORIZATION_HEADER, "");
+    HttpHeaders headers = getHttpHeaders("");
     TestResponseBean<UserUpdateRequest> result =
         new TestUtil<UserUpdateRequest>()
             .postReq(
@@ -131,9 +149,7 @@ public class UserControllerTest {
 
   @Test
   public void testCreateUserEmptyName() throws Exception {
-    HttpHeaders headers = new HttpHeaders();
-    headers.add(
-        AuthConstant.AUTHORIZATION_HEADER, "m9v8mli9qcf7zbqtw4ucktoljl9fly2f22f2t46blou6a9g26g");
+    HttpHeaders headers = getHttpHeaders(tokenVal);
     TestResponseBean<UserUpdateRequest> result =
         new TestUtil<UserUpdateRequest>()
             .postReq(
@@ -141,6 +157,12 @@ public class UserControllerTest {
 
     assertThat(result.isSuccess()).isFalse();
     assertThat(result.getCode()).isEqualTo(ResultCode.PARAM_VALID_ERROR);
+  }
+
+  private HttpHeaders getHttpHeaders(String tokenVal) {
+    HttpHeaders headers = new HttpHeaders();
+    headers.add(AuthConstant.AUTHORIZATION_HEADER, tokenVal);
+    return headers;
   }
 
   @Test
