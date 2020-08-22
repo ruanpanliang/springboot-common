@@ -19,17 +19,6 @@ public class AuthAutoConfig {
 
   @Autowired RedisUtil redisUtil;
 
-  // @Bean
-  // @ConditionalOnClass(RequestInterceptor.class)
-  // public FeignRequestHeaderInterceptor feignRequestHeaderInterceptor(
-  //     AuthContext authContext, AuthProperties authProperties) {
-  //   FeignRequestHeaderInterceptor feignRequestHeaderInterceptor =
-  //       new FeignRequestHeaderInterceptor();
-  //   feignRequestHeaderInterceptor.setAuthContext(authContext);
-  //   feignRequestHeaderInterceptor.setAuthProperties(authProperties);
-  //   return feignRequestHeaderInterceptor;
-  // }
-
   @Bean
   public AccessTokenUtil accessTokenUtil(AuthProperties authProperties) {
     AccessTokenUtil accessTokenUtil = new AccessTokenUtil();

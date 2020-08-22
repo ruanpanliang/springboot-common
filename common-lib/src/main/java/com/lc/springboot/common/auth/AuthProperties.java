@@ -29,6 +29,7 @@ public class AuthProperties {
   @ApiModelProperty(value = "令牌过期时间，单位：秒", example = "86400")
   private long accessTokenValiditySeconds = 86400;
 
+  /** Session timed out, please log in again */
   @ApiModelProperty(value = "会话超时，请重新登录")
   private String accessTokenTimeout = "会话超时，请重新登录";
 }

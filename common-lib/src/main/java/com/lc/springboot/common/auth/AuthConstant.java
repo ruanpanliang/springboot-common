@@ -12,18 +12,15 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel("校验常量类")
 public class AuthConstant {
 
-  /**
-   * AUTHORIZATION_HEADER is the http request header key used for accessing the internal
-   * authorization.
-   */
+  /** AUTHORIZATION_HEADER 是用于访问内部授权服务的http请求头的键 */
   @ApiModelProperty(value = "授权header的key", example = "Authorization")
   public static final String AUTHORIZATION_HEADER = "Authorization";
 
-  /** 获取cookie的名称 */
+  /** 获取cookie名称 */
   @ApiModelProperty(value = "Cookie的名称", example = "cookie-name")
   public static final String COOKIE_NAME = "cookie-name";
 
-  /** header set for internal user id */
+  /** 请求头设置为内部用户ID，一般用于集成feign client模块的是否使用 */
   @ApiModelProperty(value = "当前用户ID", example = "current-user-id")
   public static final String CURRENT_USER_ID = "current-user-id";
 }

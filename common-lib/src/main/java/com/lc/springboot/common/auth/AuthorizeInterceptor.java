@@ -30,11 +30,10 @@ public abstract class AuthorizeInterceptor extends HandlerInterceptorAdapter {
     HandlerMethod handlerMethod = (HandlerMethod) handler;
     Authorize authorize = handlerMethod.getMethod().getAnnotation(Authorize.class);
     if (authorize == null) {
-      // 表明不需要做权限校验
+      // 不需要做权限校验
       return true;
     }
 
-    // 检测请求头信息
     String authz = AuthContext.getAuthz();
 
     if (StringUtils.isEmpty(authz)) {
