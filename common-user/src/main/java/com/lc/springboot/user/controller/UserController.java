@@ -5,13 +5,9 @@ import com.lc.springboot.common.api.BaseListResponse;
 import com.lc.springboot.common.api.BaseResponse;
 import com.lc.springboot.common.api.MyPageInfo;
 import com.lc.springboot.common.auth.Authorize;
-import com.lc.springboot.common.auth.token.AccessTokenUtil;
-import com.lc.springboot.common.crypto.Sha256;
 import com.lc.springboot.user.dto.request.UserAddRequest;
-import com.lc.springboot.user.dto.request.UserLoginRequest;
 import com.lc.springboot.user.dto.request.UserQueryRequest;
 import com.lc.springboot.user.dto.request.UserUpdateRequest;
-import com.lc.springboot.user.dto.response.UserLoginDetailResponse;
 import com.lc.springboot.user.model.User;
 import com.lc.springboot.user.service.UserService;
 import io.swagger.annotations.Api;
@@ -37,40 +33,6 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
   @Autowired UserService userService;
-  @Autowired AccessTokenUtil accessTokenUtil;
-
-  /**
-   * 用户登录
-   *
-   * @param userLoginRequest 用户登录请求对象
-   * @return 用户登录返回详情（包括用户基本信息，角色信息，权限信息，菜单信息，令牌信息）
-   */
-  @ApiOperation(value = "登录", notes = "登录")
-  @PostMapping(value = "/login")
-  public BaseBeanResponse<UserLoginDetailResponse> login(
-      @RequestBody UserLoginRequest userLoginRequest) {
-    userLoginRequest.setUserPassword(Sha256.getSHA256Str(userLoginRequest.getUserPassword()));
-    UserLoginDetailResponse login = userService.login(userLoginRequest);
-    return new BaseBeanResponse<>(login);
-  }
-
-
-
-  /**
-   * 用户登出
-   *
-   * @return 返回基本报文信息
-   */
-  @ApiOperation(value = "登出", notes = "登出")
-  @PostMapping(value = "/logout")
-  @Authorize({})
-  public BaseResponse logout() {
-    // 获取当前用户登录信息
-    UserLoginDetailResponse user = (UserLoginDetailResponse) accessTokenUtil.currentLoginUserInfo();
-    // 删除用户缓存信息
-    accessTokenUtil.delUserInfo(user.getUserAccount());
-    return BaseResponse.success();
-  }
 
   /**
    * 创建用户

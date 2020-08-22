@@ -1,6 +1,7 @@
 package com.lc.springboot.common.auth;
 
 import com.lc.springboot.common.holder.RequestUserHolder;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -13,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
  * @author liangchao
  */
 public class AuthContext {
+
+  public static final String BEARER_ = "Bearer ";
 
   /**
    * 获取request 指定header的信息
@@ -35,17 +38,26 @@ public class AuthContext {
    *
    * @return 用户ID
    */
-  public static String getUserId() {
-    return String.valueOf(RequestUserHolder.getId());
-    //return getRequestHeader(AuthConstant.CURRENT_USER_ID);
+  public static Long getUserId() {
+    return RequestUserHolder.getId();
   }
 
   /**
    * 获取认证信息
    *
-   * @return
+   * @return 令牌的值
    */
   public static String getAuthz() {
-    return getRequestHeader(AuthConstant.AUTHORIZATION_HEADER);
+    String authz = getRequestHeader(AuthConstant.AUTHORIZATION_HEADER);
+
+    if (StringUtils.isEmpty(authz)) {
+      return "";
+    }
+
+    if (StringUtils.startsWith(authz, BEARER_)) {
+      authz = authz.substring(BEARER_.length());
+    }
+
+    return authz;
   }
 }

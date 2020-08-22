@@ -40,3 +40,9 @@ management:
     web:
       exposure:
         include: "*"
+
+common:
+  auth:
+    props:
+      #默认令牌过期时间是1天
+      access-token-validity-seconds: 86400

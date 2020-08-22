@@ -35,13 +35,13 @@ public abstract class AuthorizeInterceptor extends HandlerInterceptorAdapter {
     }
 
     // 检测请求头信息
-    String authzHeader = request.getHeader(AuthConstant.AUTHORIZATION_HEADER);
+    String authz = AuthContext.getAuthz();
 
-    if (StringUtils.isEmpty(authzHeader)) {
+    if (StringUtils.isEmpty(authz)) {
       throw new PermissionDeniedException(authProperties.getErrorMsgMissingAuthHeader());
     }
 
-    return checkUser(authzHeader);
+    return checkUser(authz);
   }
 
   /**
