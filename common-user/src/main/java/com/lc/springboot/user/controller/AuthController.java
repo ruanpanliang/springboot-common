@@ -6,7 +6,7 @@ import com.lc.springboot.common.auth.AuthContext;
 import com.lc.springboot.common.auth.Authorize;
 import com.lc.springboot.common.auth.token.AccessToken;
 import com.lc.springboot.common.auth.token.AccessTokenUtil;
-import com.lc.springboot.common.crypto.Sha256;
+import com.lc.springboot.user.dto.request.RefreshTokenRequest;
 import com.lc.springboot.user.dto.request.UserLoginRequest;
 import com.lc.springboot.user.dto.response.UserLoginDetailResponse;
 import com.lc.springboot.user.service.AuthService;
@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
 
 /** @author liangchao */
 @Api(tags = "令牌刷新 Controller")
@@ -36,7 +38,6 @@ public class AuthController {
   @ApiOperation(value = "登录", notes = "登录")
   @PostMapping(value = "/login")
   public BaseBeanResponse<AccessToken> login(@RequestBody UserLoginRequest userLoginRequest) {
-    userLoginRequest.setUserPassword(Sha256.getSHA256Str(userLoginRequest.getUserPassword()));
     AccessToken login = authService.login(userLoginRequest);
     return new BaseBeanResponse<>(login);
   }
@@ -50,7 +51,8 @@ public class AuthController {
   @PostMapping(value = "/authorizationList")
   @Authorize({})
   public BaseBeanResponse<UserLoginDetailResponse> authorizationList() {
-    UserLoginDetailResponse loginDetailInfo = authService.getLoginDetailInfo();
+    UserLoginDetailResponse loginDetailInfo =
+        authService.getLoginDetailInfo(AuthContext.getUserId(), AuthContext.getAuthz());
     return new BaseBeanResponse<>(loginDetailInfo);
   }
 
@@ -63,11 +65,15 @@ public class AuthController {
   @PostMapping(value = "/logout")
   @Authorize({})
   public BaseResponse logout() {
-    accessTokenUtil.removeUserCacheInfo(AuthContext.getUserId());
+    accessTokenUtil.removeUserCacheInfo(AuthContext.getUserId(), true);
     return BaseResponse.success();
   }
 
   @PostMapping("accessToken/refreshToken")
   @ApiOperation(value = "刷新令牌值")
-  public void refresh_token() {}
+  public BaseBeanResponse<AccessToken> refresh_token(
+      @RequestBody @Valid RefreshTokenRequest refreshTokenRequest) {
+    AccessToken accessToken = authService.refreshToken(refreshTokenRequest);
+    return new BaseBeanResponse<>(accessToken);
+  }
 }

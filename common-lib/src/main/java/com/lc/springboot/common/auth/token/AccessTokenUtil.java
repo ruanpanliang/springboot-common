@@ -73,9 +73,10 @@ public class AccessTokenUtil<T> {
    * 删除用户原来保存在redis中信息
    *
    * @param userId 用户主键编号
+   * @param delUserDetailInfo 是否删除用户登录后的权限角色等详细信息
    * @return 操作成功返回true，反之返回false
    */
-  public boolean removeUserCacheInfo(Long userId) {
+  public boolean removeUserCacheInfo(Long userId, boolean delUserDetailInfo) {
     if (checkParams(userId)) {
       return false;
     }
@@ -85,7 +86,11 @@ public class AccessTokenUtil<T> {
 
     if (StringUtils.isNotBlank(oldAccessToken)) {
       // 将原来保存的令牌删除,将原来保存的用户信息进行删除
-      redisUtil.del(ACCESS_TOKEN + oldAccessToken, USER + oldAccessToken);
+      if (delUserDetailInfo) {
+        redisUtil.del(ACCESS_TOKEN + oldAccessToken, USER + oldAccessToken);
+      } else {
+        redisUtil.del(ACCESS_TOKEN + oldAccessToken);
+      }
     }
 
     if (StringUtils.isNotBlank(oldRefreshToken)) {
@@ -116,6 +121,30 @@ public class AccessTokenUtil<T> {
    */
   public Long getUserId(String accessToken) {
     Object userId = redisUtil.get(ACCESS_TOKEN + accessToken);
+    if (userId != null) {
+      return NumberUtil.parseLong(userId.toString());
+    }
+    return 0L;
+  }
+
+  /**
+   * 判断refreshToken的值是否还在redis中保存
+   *
+   * @param refreshToken 刷新令牌的值
+   * @return 如果该值还未过期，则返回true，否者返回false
+   */
+  public boolean isRefreshTokenValid(String refreshToken) {
+    return redisUtil.hasKey(REFRESH_TOKEN + refreshToken);
+  }
+
+  /**
+   * 根据refreshToken的值获取用户的主键编号
+   *
+   * @param refreshToken 刷新令牌的值
+   * @return 如果刷新令牌的值还未过期，则返回对应的用户主键编号，否则返回0
+   */
+  public Long getUserIdByRefreshToken(String refreshToken) {
+    Object userId = redisUtil.get(REFRESH_TOKEN + refreshToken);
     if (userId != null) {
       return NumberUtil.parseLong(userId.toString());
     }
