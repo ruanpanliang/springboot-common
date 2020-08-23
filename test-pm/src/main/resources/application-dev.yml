@@ -14,8 +14,8 @@ spring:
     testWhileIdle: true
   redis:
     ################### redis 单机版 start ##########################
-    host: 20.26.39.217
-    port: 9201
+    host: localhost
+    port: 6379
     timeout: 6000
     database: 1
     lettuce:

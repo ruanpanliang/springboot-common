@@ -1,8 +1,5 @@
 package com.lc.springboot.user.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.lc.springboot.common.auth.token.AccessToken;
-import com.lc.springboot.common.mybatisplus.model.BaseModel;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -52,8 +49,8 @@ public class UserLoginDetailResponse implements Serializable {
   @ApiModelProperty("菜单列表")
   private List<MenuLoginDetailResponse> menuList;
 
-  @ApiModelProperty("令牌信息")
-  private AccessToken accessToken;
+  // @ApiModelProperty("令牌信息")
+  // private AccessToken accessToken;
 
   // @ApiModelProperty(value = "手机号码")
   // private String phone;

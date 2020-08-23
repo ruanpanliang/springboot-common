@@ -2,8 +2,8 @@ package com.lc.springboot.user.service;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.collection.ListUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.lc.springboot.common.api.MyPageInfo;
 import com.lc.springboot.common.auth.AuthProperties;
 import com.lc.springboot.common.auth.token.AccessToken;
 import com.lc.springboot.common.auth.token.AccessTokenGen;
@@ -26,7 +26,6 @@ import com.lc.springboot.user.model.User;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -52,7 +51,7 @@ public class AuthService extends ServiceImpl<UserMapper, User> {
   @Autowired private AuthProperties authProperties;
   @Autowired private AccessTokenUtil accessTokenUtil;
   @Autowired private RedisUtil redisUtil;
-  @Autowired private UserService userService;
+  @Resource private UserMapper userMapper;
   @Autowired private PasswordEncoder passwordEncoder;
 
   /**
@@ -62,19 +61,18 @@ public class AuthService extends ServiceImpl<UserMapper, User> {
    * @return 用户令牌信息
    */
   public AccessToken login(UserLoginRequest userLoginRequest) {
-    String userPassword = userLoginRequest.getUserPassword();
-    userLoginRequest.setUserPassword("");
-    MyPageInfo<User> list =
-        userService.list(convertToQueryDto(userLoginRequest), PageRequest.of(1, 1));
+    QueryWrapper queryWrapper = new QueryWrapper();
+    queryWrapper.eq(User.COL_USER_ACCOUNT, userLoginRequest.getUserAccount());
+    List<User> list = userMapper.selectList(queryWrapper);
 
-    if (CollectionUtil.isEmpty(list.getList())) {
+    if (CollectionUtil.isEmpty(list)) {
       throw new ServiceException("账号或密码错误");
     }
 
-    User user = list.getList().get(0);
+    User user = list.get(0);
 
     // 判断密码是否匹配
-    if (!passwordEncoder.matches(userPassword, user.getUserPassword())) {
+    if (!passwordEncoder.matches(userLoginRequest.getUserPassword(), user.getUserPassword())) {
       throw new ServiceException("账号或密码错误");
     }
 

@@ -53,8 +53,8 @@ public class TestUtil<T> {
    * @return {@link MockHttpServletRequestBuilder}
    * @throws JsonProcessingException
    */
-  public TestBaseResponse request(MockMvc mockMvc, String path, Object paramObj, HttpMethod httpMethod)
-      throws Exception {
+  public TestBaseResponse request(
+      MockMvc mockMvc, String path, Object paramObj, HttpMethod httpMethod) throws Exception {
     return getBaseResponse(mockMvc, path, paramObj, null, httpMethod);
   }
 
@@ -133,6 +133,7 @@ public class TestUtil<T> {
    * @param path 请求路径
    * @param paramObj 参数请求对象
    * @param httpHeaders 请求头信息
+   * @param clazz 封装内容泛型对象（info节点）
    * @param httpMethod 请求方法
    * @return {@link MockHttpServletRequestBuilder}
    * @throws JsonProcessingException

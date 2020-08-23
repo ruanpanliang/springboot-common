@@ -1,10 +1,11 @@
 package com.lc.springboot.common.error;
 
+import com.github.structlog4j.ILogger;
+import com.github.structlog4j.SLoggerFactory;
 import com.lc.springboot.common.api.BaseResponse;
 import com.lc.springboot.common.api.ResultCode;
 import com.lc.springboot.common.auth.PermissionDeniedException;
-import com.github.structlog4j.ILogger;
-import com.github.structlog4j.SLoggerFactory;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
@@ -14,7 +15,8 @@ import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
@@ -96,7 +98,11 @@ public class GlobalExceptionTranslator {
   @ExceptionHandler(HttpMessageNotReadableException.class)
   public BaseResponse handleError(HttpMessageNotReadableException e) {
     logger.error("Message Not Readable", e);
-    return BaseResponse.builder().code(ResultCode.MSG_NOT_READABLE).message(e.getMessage()).build();
+    String message = e.getMessage();
+    if (StringUtils.isNotEmpty(message) && message.indexOf(":") > 0) {
+      message = message.substring(0, message.indexOf(":"));
+    }
+    return BaseResponse.builder().code(ResultCode.MSG_NOT_READABLE).message(message).build();
   }
 
   @ExceptionHandler(HttpRequestMethodNotSupportedException.class)

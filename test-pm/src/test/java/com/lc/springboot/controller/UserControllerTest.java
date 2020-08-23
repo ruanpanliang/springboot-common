@@ -6,9 +6,7 @@ import com.lc.springboot.common.api.ResultCode;
 import com.lc.springboot.common.auth.AuthConstant;
 import com.lc.springboot.common.crypto.Sha256;
 import com.lc.springboot.user.dto.request.UserAddRequest;
-import com.lc.springboot.user.dto.request.UserLoginRequest;
 import com.lc.springboot.user.dto.request.UserUpdateRequest;
-import com.lc.springboot.user.dto.response.UserLoginDetailResponse;
 import com.lc.springboot.user.enums.UserStatus;
 import com.lc.springboot.user.model.User;
 import lombok.extern.slf4j.Slf4j;
@@ -51,9 +49,6 @@ public class UserControllerTest {
   /** 用户更新请求对象 */
   UserUpdateRequest userUpdateRequest;
 
-  /** 用户登录请求对象 */
-  UserLoginRequest userLoginRequest;
-
   @Rule public ExpectedException expectedEx = ExpectedException.none();
 
   private static final String USER_ACCOUNT = "e150lotbsb";
@@ -62,8 +57,6 @@ public class UserControllerTest {
 
   @Before
   public void setUp() {
-    userLoginRequest =
-        UserLoginRequest.builder().userAccount(USER_ACCOUNT).userPassword(USER_PASSWORD).build();
 
     userAddRequest =
         UserAddRequest.builder()
@@ -90,40 +83,6 @@ public class UserControllerTest {
     HttpHeaders headers = new HttpHeaders();
     headers.add(AuthConstant.AUTHORIZATION_HEADER, tokenVal);
     return headers;
-  }
-
-  /**
-   * 测试登录
-   *
-   * @throws Exception
-   */
-  @Test
-  public void testUserLogin() throws Exception {
-    TestBaseBeanResponse<UserLoginDetailResponse> result =
-        new TestUtil<UserLoginDetailResponse>()
-            .request(
-                mockMvc,
-                BASE_PATH + "/login",
-                userLoginRequest,
-                UserLoginDetailResponse.class,
-                HttpMethod.POST);
-
-    assertThat(result.isSuccess()).isTrue();
-    assertThat(result.getInfo().getUserAccount()).isEqualTo(USER_ACCOUNT);
-  }
-
-  /**
-   * 测试登出
-   *
-   * @throws Exception
-   */
-  @Test
-  public void testUserLogout() throws Exception {
-    HttpHeaders headers = getHttpHeaders(tokenVal);
-    TestBaseResponse result =
-        new TestUtil().request(mockMvc, BASE_PATH + "/logout", null, headers, HttpMethod.POST);
-
-    assertThat(result.isSuccess()).isTrue();
   }
 
   /**
