@@ -1,12 +1,12 @@
 package com.lc.springboot.user.mapper;
 
-import com.lc.springboot.user.dto.response.PrivilegeLoginDetailResponse;
-import org.apache.ibatis.annotations.Param;
-import java.util.List;
-import java.util.Collection;
-
-import com.lc.springboot.user.model.Privilege;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.lc.springboot.user.dto.response.PrivilegeLoginDetailResponse;
+import com.lc.springboot.user.model.Privilege;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.Collection;
+import java.util.List;
 
 /**
  * 权限 Mapper 接口

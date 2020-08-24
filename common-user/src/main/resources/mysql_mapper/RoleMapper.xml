@@ -50,6 +50,7 @@
                a.ROLE_TYPE
                 from SYS_ROLE a
                 join SYS_USER_ROLE b on a.ID = b.ROLE_ID
+                and a.DELETE_FLAG = 0 and b.DELETE_FLAG = 0
         <!--角色状态正常-->
         and a.ROLE_STATUS = 1
                 and b.USER_ID = #{userId}

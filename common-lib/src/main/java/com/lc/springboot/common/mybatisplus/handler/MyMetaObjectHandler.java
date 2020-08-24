@@ -28,13 +28,15 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
     setFieldValByName(BaseModel.RANDOM_CODE, StringGenerator.uuid(), metaObject);
     // 创建人
     setFieldValByName(BaseModel.CREATED_BY, AuthContext.getUserId(), metaObject);
+    // 更新人
+    setFieldValByName(BaseModel.UPDATED_BY, AuthContext.getUserId(), metaObject);
   }
 
   /** 更新时的填充策略 */
   @Override
   public void updateFill(MetaObject metaObject) {
     // 更新时间
-    setFieldValByName("updatedTime", new Date(), metaObject);
+    setFieldValByName(BaseModel.UPDATED_TIME, new Date(), metaObject);
     // 更新人
     setFieldValByName(BaseModel.UPDATED_BY, AuthContext.getUserId(), metaObject);
   }

@@ -25,7 +25,12 @@ public class MyBatisPlusConfiguration {
   }
 
   @Bean
-  public MyMetaObjectHandler metaObjectHandler(){
+  public MyMetaObjectHandler metaObjectHandler() {
     return new MyMetaObjectHandler();
   }
+
+  // @Bean
+  // public MySqlInjector myLogicSqlInjector() {
+  //   return new MySqlInjector();
+  // }
 }

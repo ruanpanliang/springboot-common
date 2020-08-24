@@ -7,15 +7,20 @@ import com.lc.springboot.common.api.MyPageInfo;
 import com.lc.springboot.common.api.ResultCode;
 import com.lc.springboot.common.error.ServiceException;
 import com.lc.springboot.user.dto.request.UserAddRequest;
+import com.lc.springboot.user.dto.request.UserModPwdRequest;
 import com.lc.springboot.user.dto.request.UserQueryRequest;
 import com.lc.springboot.user.dto.request.UserUpdateRequest;
+import com.lc.springboot.user.enums.UserResultCode;
 import com.lc.springboot.user.enums.UserStatus;
 import com.lc.springboot.user.mapper.UserMapper;
 import com.lc.springboot.user.model.User;
+import com.lc.springboot.user.util.UserUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +39,7 @@ public class UserService extends ServiceImpl<UserMapper, User> {
 
   @Autowired private ModelMapper modelMapper;
   @Resource private UserMapper userMapper;
+  @Autowired PasswordEncoder passwordEncoder;
 
   /**
    * 创建用户
@@ -70,12 +76,38 @@ public class UserService extends ServiceImpl<UserMapper, User> {
     }
 
     user.setUserAccount(userUpdateRequest.getUserAccount());
-    // user.setUserPassword(userUpdateRequest.getUserPassword());
     user.setUserType(userUpdateRequest.getUserType());
     user.setUserName(userUpdateRequest.getUserName());
     user.setEmail(userUpdateRequest.getEmail());
     user.setPhone(userUpdateRequest.getPhone());
     user.setStatus(userUpdateRequest.getStatus());
+
+    return userMapper.updateById(user);
+  }
+
+  /**
+   * @param userModPwdRequest 用户密码更新请求对象
+   * @return 返回更新条数
+   */
+  @Transactional(rollbackFor = Exception.class)
+  public int modPwd(UserModPwdRequest userModPwdRequest) {
+
+    if (!StringUtils.equals(userModPwdRequest.getNewPwd(), userModPwdRequest.getNewPwdAgain())) {
+      throw new ServiceException(UserResultCode.PWD_NOT_SAME.getMsg());
+    }
+
+    Long userId = UserUtil.checkUserIdAndGet();
+
+    // 先取回之前数据
+    User user = getById(userId);
+
+    // 如果不存在，需要报异常
+    if (user == null) {
+      throw new ServiceException(ResultCode.RECORD_NOT_FOUND);
+    }
+
+    // 执行用户更新操作
+    user.setUserPassword(passwordEncoder.encode(userModPwdRequest.getNewPwd()));
 
     return userMapper.updateById(user);
   }

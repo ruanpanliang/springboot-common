@@ -6,6 +6,7 @@ import com.lc.springboot.common.api.BaseResponse;
 import com.lc.springboot.common.api.MyPageInfo;
 import com.lc.springboot.common.auth.Authorize;
 import com.lc.springboot.user.dto.request.UserAddRequest;
+import com.lc.springboot.user.dto.request.UserModPwdRequest;
 import com.lc.springboot.user.dto.request.UserQueryRequest;
 import com.lc.springboot.user.dto.request.UserUpdateRequest;
 import com.lc.springboot.user.model.User;
@@ -112,6 +113,14 @@ public class UserController {
   @Authorize({})
   public BaseResponse delete(@PathVariable Long id) {
     userService.removeById(id);
+    return BaseResponse.success();
+  }
+
+  @ApiOperation("修改密码")
+  @PostMapping(path = "modPwd")
+  @Authorize({})
+  public BaseResponse modPwd(@RequestBody UserModPwdRequest userModPwdRequest) {
+    userService.modPwd(userModPwdRequest);
     return BaseResponse.success();
   }
 }

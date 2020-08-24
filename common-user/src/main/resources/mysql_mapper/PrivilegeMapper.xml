@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lc.springboot.user.mapper.PrivilegeMapper">
-
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.lc.springboot.user.model.Privilege">
-        <result column="ID" property="id" />
-        <result column="CREATED_BY" property="createdBy" />
-        <result column="CREATED_TIME" property="createdTime" />
-        <result column="UPDATED_BY" property="updatedBy" />
-        <result column="UPDATED_TIME" property="updatedTime" />
-        <result column="RANDOM_CODE" property="randomCode" />
-        <result column="REVISION" property="revision" />
-        <result column="DELETE_FLAG" property="deleteFlag" />
-        <result column="PRIVILEGE_CODE" property="privilegeCode" />
-        <result column="PRIVILEGE_NAME" property="privilegeName" />
-        <result column="PRIVILEGE_TYPE" property="privilegeType" />
-        <result column="ENTITY_TYPE" property="entityType" />
-        <result column="ENTITY_ID" property="entityId" />
-        <result column="REMARK" property="remark" />
+        <result column="ID" property="id"/>
+        <result column="CREATED_BY" property="createdBy"/>
+        <result column="CREATED_TIME" property="createdTime"/>
+        <result column="UPDATED_BY" property="updatedBy"/>
+        <result column="UPDATED_TIME" property="updatedTime"/>
+        <result column="RANDOM_CODE" property="randomCode"/>
+        <result column="REVISION" property="revision"/>
+        <result column="DELETE_FLAG" property="deleteFlag"/>
+        <result column="PRIVILEGE_CODE" property="privilegeCode"/>
+        <result column="PRIVILEGE_NAME" property="privilegeName"/>
+        <result column="PRIVILEGE_TYPE" property="privilegeType"/>
+        <result column="ENTITY_TYPE" property="entityType"/>
+        <result column="ENTITY_ID" property="entityId"/>
+        <result column="REMARK" property="remark"/>
     </resultMap>
 
-    <resultMap id="PrivilegeLoginDetailResponseMap" type="com.lc.springboot.user.dto.response.PrivilegeLoginDetailResponse">
-        <result column="PRIVILEGE_ID" property="privilegeId" />
-        <result column="PRIVILEGE_CODE" property="privilegeCode" />
-        <result column="PRIVILEGE_NAME" property="privilegeName" />
-        <result column="PRIVILEGE_TYPE" property="privilegeType" />
+    <resultMap id="PrivilegeLoginDetailResponseMap"
+               type="com.lc.springboot.user.dto.response.PrivilegeLoginDetailResponse">
+        <result column="PRIVILEGE_ID" property="privilegeId"/>
+        <result column="PRIVILEGE_CODE" property="privilegeCode"/>
+        <result column="PRIVILEGE_NAME" property="privilegeName"/>
+        <result column="PRIVILEGE_TYPE" property="privilegeType"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -37,22 +37,26 @@
         RANDOM_CODE,
         REVISION,
         DELETE_FLAG,
-        PRIVILEGE_CODE, PRIVILEGE_NAME, PRIVILEGE_TYPE, ENTITY_TYPE, ENTITY_ID, REMARK
+        PRIVILEGE_CODE,
+        PRIVILEGE_NAME,
+        PRIVILEGE_TYPE,
+        ENTITY_TYPE,
+        ENTITY_ID,
+        REMARK
     </sql>
 
     <select id="getPrivilegeListByRoleIds" resultMap="PrivilegeLoginDetailResponseMap">
         select a.PRIVILEGE_ID,
-        b.PRIVILEGE_CODE,
-        b.PRIVILEGE_NAME,
-        b.PRIVILEGE_TYPE
-        from SYS_ROLE_PRIVILEGE a
-        join SYS_PRIVILEGE b on a.PRIVILEGE_ID = b.ID
-        and a.ROLE_ID in
+               b.PRIVILEGE_CODE,
+               b.PRIVILEGE_NAME,
+               b.PRIVILEGE_TYPE
+                from SYS_ROLE_PRIVILEGE a
+                join SYS_PRIVILEGE b on a.PRIVILEGE_ID = b.ID
+                and a.DELETE_FLAG = 0 and b.DELETE_FLAG = 0
+                and a.ROLE_ID in
         <foreach item="item" index="index" collection="idCollection"
                  open="(" separator="," close=")">
             #{item}
         </foreach>
     </select>
-
-
 </mapper>
