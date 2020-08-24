@@ -39,7 +39,7 @@ public class Role extends BaseModel {
 
     @ApiModelProperty(value = "角色状态 | 1:正常 0：失效")
     @TableField("ROLE_STATUS")
-    private String roleStatus;
+    private Integer roleStatus;
 
     @ApiModelProperty(value = "备注")
     @TableField("REMARK")

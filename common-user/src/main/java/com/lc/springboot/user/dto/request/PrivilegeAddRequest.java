@@ -47,12 +47,11 @@ public class PrivilegeAddRequest implements Serializable {
   private String entityId;
 
   @ApiModelProperty(value = "备注")
-  //@NotBlank(message = "备注不能为空")
   private String remark;
 
   @ApiModelProperty(value = "菜单ID列表", required = true)
   @NotEmpty(message = "菜单ID列表不能为空")
-  private List<Long> menuId;
+  private List<Long> menuIdList;
 
   public String getPrivilegeCode() {
     return privilegeCode;
@@ -102,11 +101,11 @@ public class PrivilegeAddRequest implements Serializable {
     this.remark = remark;
   }
 
-  public List<Long> getMenuId() {
-    return menuId;
+  public List<Long> getMenuIdList() {
+    return menuIdList;
   }
 
-  public void setMenuId(List<Long> menuId) {
-    this.menuId = menuId;
+  public void setMenuIdList(List<Long> menuIdList) {
+    this.menuIdList = menuIdList;
   }
 }

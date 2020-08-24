@@ -14,11 +14,8 @@ import lombok.*;
 * @version 1.0
 */
 
-@Data
 @EqualsAndHashCode(callSuper = true)
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @TableName("SYS_ROLE_PRIVILEGE")
 @ApiModel(value="RolePrivilege对象", description="角色对应权限 实体对象")
 public class RolePrivilege extends BaseModel {
@@ -33,6 +30,29 @@ public class RolePrivilege extends BaseModel {
     @TableField("PRIVILEGE_ID")
     private Long privilegeId;
 
+    public RolePrivilege() {
+    }
+
+    public RolePrivilege(Long roleId, Long privilegeId) {
+        this.roleId = roleId;
+        this.privilegeId = privilegeId;
+    }
+
+    public Long getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(Long roleId) {
+        this.roleId = roleId;
+    }
+
+    public Long getPrivilegeId() {
+        return privilegeId;
+    }
+
+    public void setPrivilegeId(Long privilegeId) {
+        this.privilegeId = privilegeId;
+    }
 
     public static final String COL_ROLE_ID = "ROLE_ID";
 

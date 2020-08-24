@@ -4,8 +4,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -20,10 +18,8 @@ import java.util.List;
  * @date: 2020-08-17 17:18
  * @version 1.0
  */
-@Data
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 @ApiModel(value = "Privilege 更新请求对象", description = "权限 更新请求实体对象")
 public class PrivilegeUpdateRequest implements Serializable {
 
@@ -60,5 +56,71 @@ public class PrivilegeUpdateRequest implements Serializable {
 
   @ApiModelProperty(value = "菜单ID列表", required = true)
   @NotEmpty(message = "菜单ID列表不能为空")
-  private List<Long> menuId;
+  private List<Long> menuIdList;
+
+  public PrivilegeUpdateRequest() {}
+
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
+  }
+
+  public String getPrivilegeCode() {
+    return privilegeCode;
+  }
+
+  public void setPrivilegeCode(String privilegeCode) {
+    this.privilegeCode = privilegeCode;
+  }
+
+  public String getPrivilegeName() {
+    return privilegeName;
+  }
+
+  public void setPrivilegeName(String privilegeName) {
+    this.privilegeName = privilegeName;
+  }
+
+  public String getPrivilegeType() {
+    return privilegeType;
+  }
+
+  public void setPrivilegeType(String privilegeType) {
+    this.privilegeType = privilegeType;
+  }
+
+  public String getEntityType() {
+    return entityType;
+  }
+
+  public void setEntityType(String entityType) {
+    this.entityType = entityType;
+  }
+
+  public String getEntityId() {
+    return entityId;
+  }
+
+  public void setEntityId(String entityId) {
+    this.entityId = entityId;
+  }
+
+  public String getRemark() {
+    return remark;
+  }
+
+  public void setRemark(String remark) {
+    this.remark = remark;
+  }
+
+  public List<Long> getMenuIdList() {
+    return menuIdList;
+  }
+
+  public void setMenuIdList(List<Long> menuIdList) {
+    this.menuIdList = menuIdList;
+  }
 }

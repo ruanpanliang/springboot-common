@@ -13,9 +13,8 @@ import com.lc.springboot.user.service.AuthService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 
 /** @author liangchao */
 @Api(tags = "用户登录认证，授权 控制器处理类")
@@ -34,7 +33,7 @@ public class AuthController {
    */
   @ApiOperation(value = "登录 (无需header token校验)")
   @PostMapping(value = "/login")
-  public BaseBeanResponse<AccessToken> login(@RequestBody UserLoginRequest userLoginRequest) {
+  public BaseBeanResponse<AccessToken> login(@RequestBody @Validated UserLoginRequest userLoginRequest) {
     AccessToken login = authService.login(userLoginRequest);
     return new BaseBeanResponse<>(login);
   }
@@ -69,7 +68,7 @@ public class AuthController {
   @PostMapping("/refreshToken")
   @ApiOperation(value = "刷新令牌值 (无需header token校验)")
   public BaseBeanResponse<AccessToken> refreshToken(
-      @RequestBody @Valid RefreshTokenRequest refreshTokenRequest) {
+      @RequestBody @Validated RefreshTokenRequest refreshTokenRequest) {
     AccessToken accessToken = authService.refreshToken(refreshTokenRequest);
     return new BaseBeanResponse<>(accessToken);
   }

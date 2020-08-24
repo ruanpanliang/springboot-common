@@ -57,8 +57,8 @@ public class PrivilegeService extends ServiceImpl<PrivilegeMapper, Privilege> {
     log.info("创建权限,{}", privilege);
 
     // 创建对应的菜单列表
-    List<PrivilegeMenu> privilegeMenuList = new ArrayList<>(privilegeAddRequest.getMenuId().size());
-    for (Long menuId : privilegeAddRequest.getMenuId()) {
+    List<PrivilegeMenu> privilegeMenuList = new ArrayList<>(privilegeAddRequest.getMenuIdList().size());
+    for (Long menuId : privilegeAddRequest.getMenuIdList()) {
       if (menuId == 0L) {
         continue;
       }
@@ -106,7 +106,7 @@ public class PrivilegeService extends ServiceImpl<PrivilegeMapper, Privilege> {
             .collect(Collectors.toList());
 
     Collection sameList =
-        CollectionUtil.getSame(privilegeUpdateRequest.getMenuId(), priviMenuIdList);
+        CollectionUtil.getSame(privilegeUpdateRequest.getMenuIdList(), priviMenuIdList);
 
     // 删除不需要的
     priviMenuIdList.removeAll(sameList);
@@ -118,11 +118,11 @@ public class PrivilegeService extends ServiceImpl<PrivilegeMapper, Privilege> {
     }
 
     // 新增新加的
-    privilegeUpdateRequest.getMenuId().removeAll(sameList);
+    privilegeUpdateRequest.getMenuIdList().removeAll(sameList);
     privilegeMenuList.clear();
-    if (privilegeUpdateRequest.getMenuId().size() > 0) {
+    if (privilegeUpdateRequest.getMenuIdList().size() > 0) {
       // 创建对应的菜单列表
-      for (Long menuId : privilegeUpdateRequest.getMenuId()) {
+      for (Long menuId : privilegeUpdateRequest.getMenuIdList()) {
         if (menuId == 0L) {
           continue;
         }
