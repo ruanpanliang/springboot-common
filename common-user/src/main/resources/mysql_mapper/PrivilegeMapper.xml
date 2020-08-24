@@ -46,7 +46,7 @@
     </sql>
 
     <select id="getPrivilegeListByRoleIds" resultMap="PrivilegeLoginDetailResponseMap">
-        select a.PRIVILEGE_ID,
+        select distinct a.PRIVILEGE_ID,
                b.PRIVILEGE_CODE,
                b.PRIVILEGE_NAME,
                b.PRIVILEGE_TYPE

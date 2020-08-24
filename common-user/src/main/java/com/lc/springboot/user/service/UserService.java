@@ -6,6 +6,7 @@ import com.github.pagehelper.PageHelper;
 import com.lc.springboot.common.api.MyPageInfo;
 import com.lc.springboot.common.api.ResultCode;
 import com.lc.springboot.common.error.ServiceException;
+import com.lc.springboot.common.utils.CollectionUtil;
 import com.lc.springboot.user.dto.request.UserAddRequest;
 import com.lc.springboot.user.dto.request.UserModPwdRequest;
 import com.lc.springboot.user.dto.request.UserQueryRequest;
@@ -13,7 +14,10 @@ import com.lc.springboot.user.dto.request.UserUpdateRequest;
 import com.lc.springboot.user.enums.UserResultCode;
 import com.lc.springboot.user.enums.UserStatus;
 import com.lc.springboot.user.mapper.UserMapper;
+import com.lc.springboot.user.mapper.UserRoleMapper;
+import com.lc.springboot.user.model.RolePrivilege;
 import com.lc.springboot.user.model.User;
+import com.lc.springboot.user.model.UserRole;
 import com.lc.springboot.user.util.UserUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -25,6 +29,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 用户业务处理类
@@ -39,7 +47,9 @@ public class UserService extends ServiceImpl<UserMapper, User> {
 
   @Autowired private ModelMapper modelMapper;
   @Resource private UserMapper userMapper;
-  @Autowired PasswordEncoder passwordEncoder;
+  @Autowired private PasswordEncoder passwordEncoder;
+  @Autowired private UserRoleService userRoleService;
+  @Resource private UserRoleMapper userRoleMapper;
 
   /**
    * 创建用户
@@ -50,11 +60,24 @@ public class UserService extends ServiceImpl<UserMapper, User> {
   @Transactional(rollbackFor = Exception.class)
   public UserUpdateRequest create(UserAddRequest userAddRequest) {
     User user = convertToModel(userAddRequest);
+    user.setUserPassword(passwordEncoder.encode(userAddRequest.getUserPassword()));
     // 默认设置为正常状态
     user.setStatus(UserStatus.NORMAL.getCode());
 
     userMapper.insert(user);
     log.info("创建用户,{}", user);
+
+    // 创建对应的权限列表
+    List<UserRole> userRoleList = new ArrayList<>(userAddRequest.getRoleIds().size());
+    for (Long roleId : userAddRequest.getRoleIds()) {
+      if (roleId == 0L) {
+        continue;
+      }
+      UserRole userRole = new UserRole(user.getId(), roleId);
+      userRoleList.add(userRole);
+    }
+
+    userRoleService.saveBatch(userRoleList);
 
     return convertToDto(user);
   }
@@ -82,7 +105,44 @@ public class UserService extends ServiceImpl<UserMapper, User> {
     user.setPhone(userUpdateRequest.getPhone());
     user.setStatus(userUpdateRequest.getStatus());
 
-    return userMapper.updateById(user);
+    int update = userMapper.updateById(user);
+
+    // 更新与角色的关系
+    QueryWrapper queryWrapper = new QueryWrapper();
+    queryWrapper.eq(UserRole.COL_USER_ID, userUpdateRequest.getId());
+    List<UserRole> userRoleList = userRoleMapper.selectList(queryWrapper);
+
+    List<Long> userRoleIdList =
+        userRoleList.stream().map(userRole -> userRole.getRoleId()).collect(Collectors.toList());
+
+    Collection sameList = CollectionUtil.getSame(userUpdateRequest.getRoleIds(), userRoleIdList);
+
+    // 删除不需要的
+    userRoleIdList.removeAll(sameList);
+
+    if (userRoleIdList.size() > 0) {
+      queryWrapper.clear();
+      queryWrapper.eq(RolePrivilege.COL_ROLE_ID, userUpdateRequest.getId());
+      queryWrapper.in(RolePrivilege.COL_PRIVILEGE_ID, userRoleIdList);
+      userRoleMapper.delete(queryWrapper);
+    }
+
+    // 新增新加的
+    userUpdateRequest.getRoleIds().removeAll(sameList);
+    userRoleList.clear();
+    if (userUpdateRequest.getRoleIds().size() > 0) {
+      // 创建对应的权限列表
+      for (Long roleId : userUpdateRequest.getRoleIds()) {
+        if (roleId == 0L) {
+          continue;
+        }
+        UserRole userRole = new UserRole(userUpdateRequest.getId(), roleId);
+        userRoleList.add(userRole);
+      }
+      userRoleService.saveBatch(userRoleList);
+    }
+
+    return update;
   }
 
   /**

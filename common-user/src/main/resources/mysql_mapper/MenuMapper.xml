@@ -51,7 +51,7 @@
     </sql>
 
     <select id="getMenuListByPrivilegeIds" resultMap="MenuLoginDetailResponseMap">
-        select a.MENU_ID,
+        select distinct a.MENU_ID,
                b.MENU_CODE,
                b.MENU_NAME,
                b.MENU_TYPE,

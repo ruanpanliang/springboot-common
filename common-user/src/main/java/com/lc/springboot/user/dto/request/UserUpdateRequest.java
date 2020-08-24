@@ -1,15 +1,16 @@
 package com.lc.springboot.user.dto.request;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.lc.springboot.common.mybatisplus.model.BaseModel;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.io.Serializable;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.util.List;
 
 /**
 * 用户 更新请求对象
@@ -18,7 +19,6 @@ import javax.validation.constraints.NotNull;
 * @version 1.0
 */
 
-@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -62,5 +62,72 @@ public class UserUpdateRequest implements Serializable {
     @NotNull(message = "用户状态 | 1：正常 0：注销不能为空")
     private Integer status;
 
+    @ApiModelProperty(value = "角色列表", required = true)
+    @NotEmpty(message = "角色列表不能为空")
+    private List<Long> roleIds;
 
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getUserAccount() {
+        return userAccount;
+    }
+
+    public void setUserAccount(String userAccount) {
+        this.userAccount = userAccount;
+    }
+
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public List<Long> getRoleIds() {
+        return roleIds;
+    }
+
+    public void setRoleIds(List<Long> roleIds) {
+        this.roleIds = roleIds;
+    }
 }
