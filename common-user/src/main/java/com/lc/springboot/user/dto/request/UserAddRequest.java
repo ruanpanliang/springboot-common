@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
@@ -18,6 +19,7 @@ import java.util.List;
  * @date: 2020-08-17 17:18
  * @version 1.0
  */
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -57,60 +59,4 @@ public class UserAddRequest implements Serializable {
   @ApiModelProperty(value = "角色列表", required = true)
   @NotEmpty(message = "角色列表不能为空")
   private List<Long> roleIds;
-
-  public String getUserAccount() {
-    return userAccount;
-  }
-
-  public void setUserAccount(String userAccount) {
-    this.userAccount = userAccount;
-  }
-
-  public String getUserPassword() {
-    return userPassword;
-  }
-
-  public void setUserPassword(String userPassword) {
-    this.userPassword = userPassword;
-  }
-
-  public String getUserType() {
-    return userType;
-  }
-
-  public void setUserType(String userType) {
-    this.userType = userType;
-  }
-
-  public String getUserName() {
-    return userName;
-  }
-
-  public void setUserName(String userName) {
-    this.userName = userName;
-  }
-
-  public String getEmail() {
-    return email;
-  }
-
-  public void setEmail(String email) {
-    this.email = email;
-  }
-
-  public String getPhone() {
-    return phone;
-  }
-
-  public void setPhone(String phone) {
-    this.phone = phone;
-  }
-
-  public List<Long> getRoleIds() {
-    return roleIds;
-  }
-
-  public void setRoleIds(List<Long> roleIds) {
-    this.roleIds = roleIds;
-  }
 }
