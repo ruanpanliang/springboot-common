@@ -54,6 +54,7 @@ import java.util.*;
 @EnableCaching
 @AutoConfigureBefore(RedisTemplate.class)
 @EnableConfigurationProperties(RedissonProperties.class)
+@ConditionalOnClass(RedisTemplate.class)
 public class RedisAutoConfig {
 
   @Autowired(required = false)
