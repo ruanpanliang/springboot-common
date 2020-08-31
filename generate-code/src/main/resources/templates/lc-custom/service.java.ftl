@@ -81,7 +81,9 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
      * @return ${table.comment!}结果集
      */
      public MyPageInfo<${entity}> list(${table.dtoQueryName} ${table.dtoQueryName?uncap_first}, Pageable pageable) {
-        PageHelper.startPage(pageable.getPageNumber(), pageable.getPageSize());
+        if (pageable != null) {
+            PageHelper.startPage(pageable.getPageNumber(), pageable.getPageSize());
+        }
         QueryWrapper<${entity}> mapper = queryWrapper(${table.dtoQueryName?uncap_first});
         mapper.orderByDesc(${entity}.COL_CREATED_TIME);
         return new MyPageInfo(${table.mapperName?uncap_first}.selectList(mapper));
