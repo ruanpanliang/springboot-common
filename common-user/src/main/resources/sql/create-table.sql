@@ -16,8 +16,8 @@ create table SYS_MENU
     RANDOM_CODE  varchar(32)      not null comment '随机码',
     REVISION     int  default 1   not null comment '版本号',
     DELETE_FLAG  char default '0' not null comment '逻辑删除标记 0:未删除 1:已删除'
-)
-    comment '菜单';
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8 COMMENT = '菜单';
 
 create table SYS_PRIVILEGE
 (
@@ -36,8 +36,8 @@ create table SYS_PRIVILEGE
     RANDOM_CODE    varchar(32)      not null comment '随机码',
     REVISION       int  default 1   not null comment '版本号',
     DELETE_FLAG    char default '0' not null comment '逻辑删除标记 0:未删除 1:已删除'
-)
-    comment '权限';
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8 COMMENT = '权限';
 
 create table SYS_PRIVILEGE_MENU
 (
@@ -52,8 +52,8 @@ create table SYS_PRIVILEGE_MENU
     RANDOM_CODE  varchar(32)      not null comment '随机码',
     REVISION     int  default 1   not null comment '版本号',
     DELETE_FLAG  char default '0' not null comment '逻辑删除标记 0:未删除 1:已删除'
-)
-    comment '权限对应菜单';
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8 COMMENT = '权限对应菜单';
 
 create table SYS_ROLE
 (
@@ -71,8 +71,8 @@ create table SYS_ROLE
     RANDOM_CODE  varchar(32)      not null comment '随机码',
     REVISION     int  default 1   not null comment '版本号',
     DELETE_FLAG  char default '0' not null comment '逻辑删除标记 0:未删除 1:已删除'
-)
-    comment '角色';
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8 COMMENT = '角色';
 
 create table SYS_ROLE_PRIVILEGE
 (
@@ -87,8 +87,8 @@ create table SYS_ROLE_PRIVILEGE
     RANDOM_CODE  varchar(32)      not null comment '随机码',
     REVISION     int  default 1   not null comment '版本号',
     DELETE_FLAG  char default '0' not null comment '逻辑删除标记 0:未删除 1:已删除'
-)
-    comment '角色对应权限';
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8 COMMENT = '角色对应权限';
 
 create table SYS_USER
 (
@@ -108,8 +108,8 @@ create table SYS_USER
     RANDOM_CODE   varchar(32)      not null comment '随机码',
     REVISION      int  default 1   not null comment '版本号',
     DELETE_FLAG   char default '0' not null comment '逻辑删除标记 0:未删除 1:已删除'
-)
-    comment '用户';
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8 COMMENT = '用户';
 
 create table SYS_USER_ROLE
 (
@@ -124,5 +124,5 @@ create table SYS_USER_ROLE
     RANDOM_CODE  varchar(32)      not null comment '随机码',
     REVISION     int  default 1   not null comment '版本号',
     DELETE_FLAG  char default '0' not null comment '逻辑删除标记 0:未删除 1:已删除'
-)
-    comment '用户对应角色';
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8 COMMENT = '用户对应角色';
