@@ -1,7 +1,10 @@
 package ${package.DetailResponse};
 
 <#list table.importPackages as pkg>
+    <#if pkg != "com.baomidou.mybatisplus.annotation.TableName"
+    && pkg != "com.baomidou.mybatisplus.annotation.TableField">
 import ${pkg};
+    </#if>
 </#list>
 <#if swagger2>
 import io.swagger.annotations.ApiModel;
