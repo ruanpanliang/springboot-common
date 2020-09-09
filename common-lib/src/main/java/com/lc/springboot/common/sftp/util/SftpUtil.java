@@ -45,7 +45,7 @@ public class SftpUtil {
     /**
      * 下载文件
      *
-     * @param remotePath    ftp目录
+     * @param remotePath    sftp目录
      * @param fileName      需要下载的文件
      * @param localFilePath 本地文件路径
      */
@@ -53,7 +53,24 @@ public class SftpUtil {
         Sftp sftp = new Sftp(sftpProperties);
         try {
             sftp.download(remotePath + "/" + fileName, new File(localFilePath));
-            log.info("sftp 成功下载文件 " + localFilePath + "至 " + localFilePath);
+            log.info("sftp 成功下载文件 " + remotePath + "/" + fileName + "至 " + localFilePath);
+        } finally {
+            IoUtil.close(sftp);
+        }
+    }
+
+    /**
+     * 下载文件
+     *
+     * @param remotePath    sftp目录
+     * @param fileName      需要下载的文件
+     * @param localFile 本地文件对象
+     */
+    public void downloadFile(String remotePath, String fileName, File localFile) {
+        Sftp sftp = new Sftp(sftpProperties);
+        try {
+            sftp.download(remotePath + "/" + fileName, localFile);
+            log.info("sftp 成功下载文件 " + remotePath + "/" + fileName + "至 " + localFile.getAbsolutePath());
         } finally {
             IoUtil.close(sftp);
         }
