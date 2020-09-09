@@ -5,6 +5,8 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.extra.ftp.Ftp;
 import cn.hutool.extra.ftp.FtpMode;
 import com.lc.springboot.common.ftp.FtpProperties;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -17,18 +19,11 @@ import java.io.File;
  * @version 1.0
  */
 @Slf4j
+@Getter
+@Setter
 public class FtpUtil {
 
   private FtpProperties ftpProperties;
-
-  public FtpProperties getFtpProperties() {
-    return ftpProperties;
-  }
-
-  public void setFtpProperties(FtpProperties ftpProperties) {
-    this.ftpProperties = ftpProperties;
-  }
-
   /**
    * 上传文件到服务器端
    *
@@ -38,7 +33,7 @@ public class FtpUtil {
    */
   public boolean uploadFile(String destPath, String localFilePath) {
     Ftp ftp = new Ftp(ftpProperties, FtpMode.Active);
-    boolean result = false;
+    boolean result;
     try {
       result = ftp.upload(destPath, FileUtil.file(localFilePath));
       log.info("上传文件 " + localFilePath + "至 " + destPath + " 结果：" + result);
