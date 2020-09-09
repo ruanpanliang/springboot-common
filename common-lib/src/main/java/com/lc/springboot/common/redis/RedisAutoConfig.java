@@ -55,7 +55,7 @@ import java.util.*;
 @AutoConfigureBefore(RedisTemplate.class)
 @EnableConfigurationProperties(RedissonProperties.class)
 @ConditionalOnClass(RedisTemplate.class)
-@ConditionalOnProperty(prefix = "spring", name = "redis")
+//@ConditionalOnProperty(prefix = "spring", name = "redis")
 public class RedisAutoConfig {
 
     @Autowired(required = false)

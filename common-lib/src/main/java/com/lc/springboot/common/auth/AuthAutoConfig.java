@@ -3,7 +3,6 @@ package com.lc.springboot.common.auth;
 import com.lc.springboot.common.auth.token.AccessTokenUtil;
 import com.lc.springboot.common.redis.util.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -19,7 +18,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 @Configuration
 @EnableConfigurationProperties(AuthProperties.class)
 @ConditionalOnClass(RedisTemplate.class)
-@ConditionalOnBean(RedisUtil.class)
+//@ConditionalOnBean(RedisUtil.class)
 public class AuthAutoConfig {
 
   @Autowired RedisUtil redisUtil;
