@@ -6,6 +6,7 @@ import com.lc.springboot.common.config.date.StringToDateConverter;
 import com.lc.springboot.common.redis.util.RedisUtil;
 import com.lc.springboot.user.interceptor.UserAuthorizeInterceptor;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,7 +37,9 @@ public class SysUserConfig implements WebMvcConfigurer {
 
   @Bean
   public ModelMapper modelMapper() {
-    return new ModelMapper();
+    ModelMapper modelMapper = new ModelMapper();
+    modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+    return modelMapper;
   }
 
   @Override
