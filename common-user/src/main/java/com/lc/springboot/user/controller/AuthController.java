@@ -4,8 +4,8 @@ import com.lc.springboot.common.api.BaseBeanResponse;
 import com.lc.springboot.common.api.BaseResponse;
 import com.lc.springboot.common.auth.AuthContext;
 import com.lc.springboot.common.auth.Authorize;
-import com.lc.springboot.common.auth.token.AccessToken;
-import com.lc.springboot.common.auth.token.AccessTokenUtil;
+import com.lc.springboot.user.auth.token.AccessToken;
+import com.lc.springboot.user.auth.token.AccessTokenUtil;
 import com.lc.springboot.user.dto.request.RefreshTokenRequest;
 import com.lc.springboot.user.dto.request.UserLoginRequest;
 import com.lc.springboot.user.dto.response.UserLoginDetailResponse;
@@ -23,7 +23,8 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
   @Autowired AuthService authService;
-  @Autowired AccessTokenUtil accessTokenUtil;
+  @Autowired
+  AccessTokenUtil accessTokenUtil;
 
   /**
    * 用户登录

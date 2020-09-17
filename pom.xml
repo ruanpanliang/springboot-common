@@ -43,6 +43,9 @@
         <module>generate-code</module>
         <module>test-pm</module>
         <module>common-user</module>
+        <module>common-redis</module>
+        <module>common-ftp</module>
+        <module>common-sftp</module>
     </modules>
 
     <dependencyManagement>
@@ -180,6 +183,21 @@
                 <artifactId>common-lib</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.lc</groupId>
+                <artifactId>common-redis</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lc</groupId>
+                <artifactId>common-ftp</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.lc</groupId>
+                <artifactId>common-sftp</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.projectlombok</groupId>
@@ -212,6 +230,15 @@
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
             <version>${cn.hutool.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>structlog4j</groupId>
+            <artifactId>structlog4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>structlog4j</groupId>
+            <artifactId>structlog4j-json</artifactId>
         </dependency>
 
         <dependency>

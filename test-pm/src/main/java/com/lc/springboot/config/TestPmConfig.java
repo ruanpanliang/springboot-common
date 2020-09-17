@@ -2,14 +2,8 @@ package com.lc.springboot.config;
 
 import com.github.structlog4j.StructLog4J;
 import com.github.structlog4j.json.JsonFormatter;
-import com.lc.springboot.common.auth.AuthProperties;
-import com.lc.springboot.common.config.date.StringToDateConverter;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.annotation.PostConstruct;

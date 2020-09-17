@@ -35,7 +35,7 @@
         <!--内部依赖-->
         <dependency>
             <groupId>com.lc</groupId>
-            <artifactId>common-lib</artifactId>
+            <artifactId>common-redis</artifactId>
         </dependency>
         <!--        <dependency>-->
         <!--            <groupId>com.oracle</groupId>-->

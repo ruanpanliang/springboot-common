@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.lc.springboot.user.config.SysUserAutoConfig
+com.lc.springboot.common.sftp.config.SftpAutoConfig

@@ -2,7 +2,6 @@ package com.lc.springboot.ftp;
 
 import cn.hutool.core.io.checksum.crc16.CRC16CCITT;
 import com.lc.springboot.common.ftp.util.FtpUtil;
-import com.lc.springboot.common.utils.ImgBase64Util;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;

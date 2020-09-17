@@ -1,7 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.lc.springboot.common.redis.RedisAutoConfig,\
-com.lc.springboot.common.ftp.FtpAutoConfig,\
 com.lc.springboot.common.config.WebMvcConfig,\
-com.lc.springboot.common.auth.AuthAutoConfig,\
-com.lc.springboot.common.sftp.SftpAutoConfig,\
+com.lc.springboot.common.sftp.config.SftpAutoConfig,\
 com.lc.springboot.common.mybatisplus.MyBatisPlusConfiguration
