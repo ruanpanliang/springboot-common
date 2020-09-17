@@ -1,3 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 com.lc.springboot.common.config.WebMvcConfig,\
+com.lc.springboot.common.config.AuthAutoConfig,\
 com.lc.springboot.common.mybatisplus.MyBatisPlusConfiguration

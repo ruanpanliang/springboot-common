@@ -1,4 +1,4 @@
-package com.lc.springboot.user.config;
+package com.lc.springboot.common.config;
 
 import com.lc.springboot.common.auth.AuthProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
