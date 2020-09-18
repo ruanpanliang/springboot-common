@@ -5,6 +5,7 @@ import cn.hutool.core.util.ArrayUtil;
 import com.lc.springboot.common.auth.AuthProperties;
 import com.lc.springboot.common.auth.AuthorizeInterceptor;
 import com.lc.springboot.common.auth.PermissionDeniedException;
+import com.lc.springboot.common.error.ServiceException;
 import com.lc.springboot.common.holder.RequestUserHolder;
 import com.lc.springboot.common.redis.util.RedisUtil;
 import com.lc.springboot.common.utils.RequestUtil;
@@ -72,11 +73,17 @@ public class UserAuthorizeInterceptor extends AuthorizeInterceptor {
 
         String requestUri = RequestUtil.getHttpRequest().getRequestURI();
 
+        boolean checkPrivilegeOK = false;
         for (MenuLoginDetailResponse menuLoginDetailResponse : menuList) {
             if (antPathMatcher.match(menuLoginDetailResponse.getMenuPath() + "/**", requestUri)) {
-                return true;
+                checkPrivilegeOK =  true;
             }
         }
+
+        if(!checkPrivilegeOK){
+            throw new ServiceException(authProperties.getErrorMsgDoNotHaveAccess());
+        }
+
         return true;
     }
 

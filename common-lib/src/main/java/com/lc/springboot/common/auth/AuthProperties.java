@@ -10,8 +10,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class AuthProperties {
 
   /** AUTH ERROR Messages */
-  @ApiModelProperty(value = "当前用户没权限", example = "You do not have access to this service")
-  private String errorMsgDoNotHaveAccess = "You do not have access to this service";
+  @ApiModelProperty(value = "您无此功能操作权限", example = "You do not have access to this service")
+  private String errorMsgDoNotHaveAccess = "您无此功能操作权限";
 
   /** Missing Authorization http header */
   @ApiModelProperty(value = "缺少Authorization信息", example = "Missing Authorization http header")
