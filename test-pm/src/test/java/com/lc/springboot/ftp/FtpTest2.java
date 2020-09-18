@@ -9,7 +9,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import sun.misc.BASE64Encoder;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,29 +33,29 @@ public class FtpTest2 {
             "/Users/liangchao/work/我的文件/项目/三墩-移动/咪咕爱看-AI赋能/技术方案/(20200729) 浙江移动手机视频 AI智能分析片头片尾场景方案初稿.pptx");
     assertEquals(true, b);
   }
-
-  @Test
-  public void testConvert() throws IOException {
-    String localFile1 = "/Users/liangchao/tmp/ftp/aaaaaa11111.jpg";
-
-    byte[] bytes = FileUtils.readFileToByteArray(new File(localFile1));
-    // 进行base64处理
-    BASE64Encoder encoder = new BASE64Encoder();
-    String base64ImageStr = encoder.encodeBuffer(bytes);
-    byte[] aa = base64ImageStr.getBytes();
-
-    for (int i = 0; i < 1000; i++) {
-      System.out.print(aa[i]);
-    }
-    System.out.println();
-
-    String convert = ImgBase64Util.convert(base64ImageStr);
-
-    aa = convert.getBytes();
-    for (int i = 0; i < 1000; i++) {
-      System.out.print(aa[i]);
-    }
-  }
+//
+//  @Test
+//  public void testConvert() throws IOException {
+//    String localFile1 = "/Users/liangchao/tmp/ftp/aaaaaa11111.jpg";
+//
+//    byte[] bytes = FileUtils.readFileToByteArray(new File(localFile1));
+//    // 进行base64处理
+//    BASE64Encoder encoder = new BASE64Encoder();
+//    String base64ImageStr = encoder.encodeBuffer(bytes);
+//    byte[] aa = base64ImageStr.getBytes();
+//
+//    for (int i = 0; i < 1000; i++) {
+//      System.out.print(aa[i]);
+//    }
+//    System.out.println();
+//
+//    String convert = ImgBase64Util.convert(base64ImageStr);
+//
+//    aa = convert.getBytes();
+//    for (int i = 0; i < 1000; i++) {
+//      System.out.print(aa[i]);
+//    }
+//  }
 
   @Test
   public void checkSum() throws IOException {

@@ -2,7 +2,7 @@ package com.lc.springboot.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lc.springboot.common.auth.AuthConstant;
-import com.lc.springboot.common.auth.token.AccessToken;
+import com.lc.springboot.user.auth.token.AccessToken;
 import com.lc.springboot.user.dto.request.RefreshTokenRequest;
 import com.lc.springboot.user.dto.request.UserLoginRequest;
 import com.lc.springboot.user.dto.response.UserLoginDetailResponse;
