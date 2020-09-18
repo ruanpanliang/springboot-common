@@ -40,7 +40,7 @@ public abstract class AuthorizeInterceptor extends HandlerInterceptorAdapter {
       throw new PermissionDeniedException(authProperties.getErrorMsgMissingAuthHeader());
     }
 
-    return checkUser(authz);
+    return checkUser(authz,authorize.value());
   }
 
   /**
@@ -49,5 +49,5 @@ public abstract class AuthorizeInterceptor extends HandlerInterceptorAdapter {
    * @param authzHeader 请求头token信息
    * @return boolean 如果验证成功返回true，否则返回false
    */
-  public abstract boolean checkUser(String authzHeader);
+  public abstract boolean checkUser(String authzHeader,String[] authValues);
 }

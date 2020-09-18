@@ -6,6 +6,7 @@ import com.lc.springboot.common.auth.AuthContext;
 import com.lc.springboot.common.auth.Authorize;
 import com.lc.springboot.user.auth.token.AccessToken;
 import com.lc.springboot.user.auth.token.AccessTokenUtil;
+import com.lc.springboot.user.constant.UserMenuConstant;
 import com.lc.springboot.user.dto.request.RefreshTokenRequest;
 import com.lc.springboot.user.dto.request.UserLoginRequest;
 import com.lc.springboot.user.dto.response.UserLoginDetailResponse;
@@ -46,7 +47,7 @@ public class AuthController {
    */
   @ApiOperation(value = "授权列表信息")
   @GetMapping(value = "/authorizationList")
-  @Authorize({})
+  @Authorize({UserMenuConstant.AUTHORIZATION_LIST})
   public BaseBeanResponse<UserLoginDetailResponse> authorizationList() {
     UserLoginDetailResponse loginDetailInfo =
         authService.getLoginDetailInfo(AuthContext.getUserId(), AuthContext.getAuthz());
