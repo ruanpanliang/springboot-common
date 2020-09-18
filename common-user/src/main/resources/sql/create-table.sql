@@ -126,3 +126,42 @@ create table SYS_USER_ROLE
     DELETE_FLAG  char default '0' not null comment '逻辑删除标记 0:未删除 1:已删除'
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8 COMMENT = '用户对应角色';
+
+create table SYS_DICT_TYPE
+(
+    ID             bigint auto_increment comment '编号'
+        primary key,
+    DICT_TYPE_CODE varchar(32)      not null comment '字典类型编码',
+    DICT_TYPE_NAME varchar(128)     not null comment '字典类型名称',
+    STATUS         int  default 1   not null comment '状态 | 1：使用 0：未使用',
+    CREATED_BY     varchar(32)      null comment '创建人',
+    CREATED_TIME   datetime         not null comment '创建时间',
+    UPDATED_BY     varchar(32)      null comment '更新人',
+    UPDATED_TIME   datetime         not null comment '更新时间',
+    RANDOM_CODE    varchar(32)      not null comment '随机码',
+    REVISION       int  default 1   not null comment '版本号',
+    DELETE_FLAG    char default '0' not null comment '逻辑删除标记 | 0:未删除 1:已删除'
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8 COMMENT ='字典类型';
+
+create table SYS_DICT
+(
+    ID             bigint auto_increment comment '编号'
+        primary key,
+    DICT_CODE      varchar(32)      not null comment '字典编号',
+    DICT_NAME      varchar(128)     not null comment '字典名称',
+    DICT_TYPE_CODE varchar(32)      not null comment '字典类型编码',
+    STATUS         int  default 1   not null comment '状态 | 1：使用 0：未使用',
+    CREATED_BY     varchar(32)      null comment '创建人',
+    CREATED_TIME   datetime         not null comment '创建时间',
+    UPDATED_BY     varchar(32)      null comment '更新人',
+    UPDATED_TIME   datetime         not null comment '更新时间',
+    RANDOM_CODE    varchar(32)      not null comment '随机码',
+    REVISION       int  default 1   not null comment '版本号',
+    DELETE_FLAG    char default '0' not null comment '逻辑删除标记 | 0:未删除 1:已删除'
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8 COMMENT ='字典';
+
+
+
+
