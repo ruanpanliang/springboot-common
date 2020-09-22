@@ -27,9 +27,9 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
     // 随机码
     setFieldValByName(BaseModel.RANDOM_CODE, StringGenerator.uuid(), metaObject);
     // 创建人
-    setFieldValByName(BaseModel.CREATED_BY, AuthContext.getUserId(), metaObject);
+    setFieldValByName(BaseModel.CREATED_BY, String.valueOf(AuthContext.getUserId()), metaObject);
     // 更新人
-    setFieldValByName(BaseModel.UPDATED_BY, AuthContext.getUserId(), metaObject);
+    setFieldValByName(BaseModel.UPDATED_BY, String.valueOf(AuthContext.getUserId()), metaObject);
   }
 
   /** 更新时的填充策略 */

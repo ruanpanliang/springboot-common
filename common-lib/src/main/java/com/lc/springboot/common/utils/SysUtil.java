@@ -23,7 +23,11 @@ import java.util.Map;
 @Slf4j
 public class SysUtil {
 
+  /**
+   * json，utf-8模式
+   */
   public static final String JSON_UTF8_TYPE = "application/json;charset=UTF-8";
+  public static final String METHOD_ALL = "all";
 
   /**
    * 将异常堆栈信息转成String的形式返回
@@ -111,7 +115,7 @@ public class SysUtil {
    * @return
    */
   public static Map<String, String> getRequestAllHeaderInfo(HttpServletRequest request) {
-    Map<String, String> result = new HashMap<>();
+    Map<String, String> result = new HashMap<>(4);
     Enumeration<String> enumeration = request.getHeaderNames();
 
     while (enumeration.hasMoreElements()) {
@@ -157,7 +161,7 @@ public class SysUtil {
     }
 
     // 如果配置端（DB）配置的method值为all，则表示所有 Http Method的只都可以通过
-    if (StringUtils.equalsIgnoreCase(dbMethod, "all")) {
+    if (StringUtils.equalsIgnoreCase(dbMethod, METHOD_ALL)) {
       return true;
     }
 

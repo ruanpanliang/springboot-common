@@ -83,12 +83,12 @@ public class BaseModel implements Serializable {
   /** 创建人 */
   @TableField(value = "created_by", fill = FieldFill.INSERT)
   @ApiModelProperty(value = "创建人")
-  private Long createdBy;
+  private String createdBy;
 
   /** 更新人 */
   @TableField(value = "updated_by", fill = FieldFill.INSERT_UPDATE)
   @ApiModelProperty(value = "更新人")
-  private Long updatedBy;
+  private String updatedBy;
 
   /** 版本号 用于乐观锁 */
   @Version
