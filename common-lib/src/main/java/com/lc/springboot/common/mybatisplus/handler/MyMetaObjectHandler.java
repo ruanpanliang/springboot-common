@@ -38,6 +38,6 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
     // 更新时间
     setFieldValByName(BaseModel.UPDATED_TIME, new Date(), metaObject);
     // 更新人
-    setFieldValByName(BaseModel.UPDATED_BY, AuthContext.getUserId(), metaObject);
+    setFieldValByName(BaseModel.UPDATED_BY, String.valueOf(AuthContext.getUserId()), metaObject);
   }
 }
