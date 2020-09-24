@@ -78,7 +78,7 @@ public class BaseModel implements Serializable {
   @TableField("delete_flag")
   @ApiModelProperty(value = "逻辑删除标记 0:未删除（默认） 1：已删除")
   @TableLogic
-  private int deleteFlag;
+  private Integer deleteFlag;
 
   /** 创建人 */
   @TableField(value = "created_by", fill = FieldFill.INSERT)
