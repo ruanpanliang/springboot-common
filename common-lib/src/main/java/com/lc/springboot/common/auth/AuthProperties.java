@@ -53,4 +53,10 @@ public class AuthProperties {
     @ApiModelProperty(value = "白名单IP列表")
     private List<String> whiteIpList;
 
+    /**
+     * 白名单token列表，不需要用户登录再进行授权等操作
+     */
+    @ApiModelProperty(value = "白名单token列表")
+    private List<String> whiteTokenList;
+
 }

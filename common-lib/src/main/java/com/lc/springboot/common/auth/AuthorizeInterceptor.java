@@ -47,6 +47,10 @@ public abstract class AuthorizeInterceptor extends HandlerInterceptorAdapter {
 
         String authz = AuthContext.getAuthz();
 
+        if(CollectionUtil.isNotEmpty(authProperties.getWhiteTokenList()) && authProperties.getWhiteTokenList().contains(authz)){
+            return true;
+        }
+
         if (StringUtils.isEmpty(authz)) {
             throw new PermissionDeniedException(authProperties.getErrorMsgMissingAuthHeader());
         }
