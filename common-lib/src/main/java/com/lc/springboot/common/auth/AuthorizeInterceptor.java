@@ -47,6 +47,7 @@ public abstract class AuthorizeInterceptor extends HandlerInterceptorAdapter {
 
         String authz = AuthContext.getAuthz();
 
+        //指定令牌放行
         if(CollectionUtil.isNotEmpty(authProperties.getWhiteTokenList()) && authProperties.getWhiteTokenList().contains(authz)){
             return true;
         }
