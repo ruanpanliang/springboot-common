@@ -454,6 +454,49 @@ public class RedisUtil {
   }
 
   /**
+   * 将list放入缓存队列头部
+   *
+   * @param key 键
+   * @param value 值
+   * @return
+   */
+  public boolean lLeftPushAll(String key, List<Object> value) {
+    try {
+      redisTemplate.opsForList().leftPushAll(key, value);
+      return true;
+    } catch (Exception e) {
+      StackTraceElement stackTraceElement = e.getStackTrace()[0];
+      log.error(
+              "lRightPushAll-"
+                      + stackTraceElement.getMethodName()
+                      + "--"
+                      + stackTraceElement.getLineNumber());
+      return false;
+    }
+  }
+
+  /**
+   * 将对象放入缓存队列头部
+   *
+   * @param key 键
+   * @param value 值
+   * @return
+   */
+  public boolean lLeftPush(String key, Object value) {
+    try {
+      redisTemplate.opsForList().leftPush(key, value);
+      return true;
+    } catch (Exception e) {
+      StackTraceElement stackTraceElement = e.getStackTrace()[0];
+      log.error(
+              "lRightPushAll-"
+                      + stackTraceElement.getMethodName()
+                      + "--"
+                      + stackTraceElement.getLineNumber());
+      return false;
+    }
+  }
+  /**
    * 弹出list第一个值，并将该值中list中移除
    *
    * @param key 键
