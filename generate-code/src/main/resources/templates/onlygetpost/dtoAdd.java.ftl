@@ -7,12 +7,13 @@ package ${package.AddRequest};
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 </#if>
-import java.io.Serializable;
 <#if entityLombokModel>
 import lombok.*;
 </#if>
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+
 <#-- ----------  BEGIN 检测是否存在日期类型  ---------->
 <#list table.fields as field>
     <#if field.columnType== "DATE">
@@ -21,8 +22,9 @@ import java.util.Date;
     <#break>
 </#list>
 <#-------------  END 检测是否存在日期类型  ---------->
+
 /**
-* ${table.comment!} 更新请求对象
+* ${table.comment!} 新增请求对象
 * @author: ${author}
 * @date: ${date}
 * @version ${version}
@@ -46,26 +48,13 @@ import java.util.Date;
 <#--@TableName("${table.name}")-->
 <#--</#if>-->
 <#if swagger2>
-@ApiModel(value="${entity} 更新请求对象", description="${table.comment!} 更新请求实体对象")
+@ApiModel(value="${entity} 新增请求对象", description="${table.comment!} 新增请求实体对象")
 </#if>
-<#--<#if superEntityClass??>-->
-<#--public class ${entity} extends ${superEntityClass}<#if activeRecord><${entity}></#if> {-->
-<#--<#elseif activeRecord>-->
-<#--public class ${table.dtoUpdateName} extends Model<${entity}> {-->
-<#--<#else>-->
-public class ${table.dtoUpdateName} implements Serializable {
-<#--</#if>-->
+public class ${table.dtoAddName} implements Serializable {
 
 <#if entitySerialVersionUID>
     private static final long serialVersionUID = 1L;
 </#if>
-
-<#-- ----------  加默认主键字段  -------------->
-    /** ID */
-    @ApiModelProperty(value = "ID", required = true, example = "0")
-    @NotNull(message = "ID不能为空")
-    private Long id;
-
 <#-- ----------  BEGIN 字段循环遍历  ---------->
 <#list table.fields as field>
     <#if field.keyFlag>

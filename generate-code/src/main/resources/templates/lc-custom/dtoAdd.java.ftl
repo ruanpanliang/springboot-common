@@ -13,6 +13,15 @@ import lombok.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+<#-- ----------  BEGIN 检测是否存在日期类型  ---------->
+<#list table.fields as field>
+    <#if field.columnType== "DATE">
+import java.util.Date;
+    </#if>
+    <#break>
+</#list>
+<#-------------  END 检测是否存在日期类型  ---------->
+
 /**
 * ${table.comment!} 新增请求对象
 * @author: ${author}

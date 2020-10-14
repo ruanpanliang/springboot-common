@@ -8,21 +8,13 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 </#if>
 import java.io.Serializable;
+import java.util.Date;
 <#if entityLombokModel>
 import lombok.*;
 </#if>
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-<#-- ----------  BEGIN 检测是否存在日期类型  ---------->
-<#list table.fields as field>
-    <#if field.columnType== "DATE">
-import java.util.Date;
-    </#if>
-    <#break>
-</#list>
-<#-------------  END 检测是否存在日期类型  ---------->
+
 /**
-* ${table.comment!} 更新请求对象
+* ${table.comment!} 查询请求对象
 * @author: ${author}
 * @date: ${date}
 * @version ${version}
@@ -46,14 +38,14 @@ import java.util.Date;
 <#--@TableName("${table.name}")-->
 <#--</#if>-->
 <#if swagger2>
-@ApiModel(value="${entity} 更新请求对象", description="${table.comment!} 更新请求实体对象")
+@ApiModel(value="${entity} 查询请求对象", description="${table.comment!} 查询请求实体对象")
 </#if>
 <#--<#if superEntityClass??>-->
 <#--public class ${entity} extends ${superEntityClass}<#if activeRecord><${entity}></#if> {-->
 <#--<#elseif activeRecord>-->
 <#--public class ${table.dtoUpdateName} extends Model<${entity}> {-->
 <#--<#else>-->
-public class ${table.dtoUpdateName} implements Serializable {
+public class ${table.dtoQueryName} implements Serializable {
 <#--</#if>-->
 
 <#if entitySerialVersionUID>
@@ -62,8 +54,7 @@ public class ${table.dtoUpdateName} implements Serializable {
 
 <#-- ----------  加默认主键字段  -------------->
     /** ID */
-    @ApiModelProperty(value = "ID", required = true, example = "0")
-    @NotNull(message = "ID不能为空")
+    @ApiModelProperty(value = "ID", example = "0")
     private Long id;
 
 <#-- ----------  BEGIN 字段循环遍历  ---------->
@@ -74,26 +65,38 @@ public class ${table.dtoUpdateName} implements Serializable {
 
     <#if field.comment!?length gt 0>
         <#if swagger2>
-    @ApiModelProperty(value = "${field.comment}", required = true)
+            <#if field.columnType == "INTEGER" || field.columnType == "LONG">
+    @ApiModelProperty(value = "${field.comment}", example = "0")
+            <#elseif field.columnType == "BIG_DECIMAL">
+    @ApiModelProperty(value = "${field.comment}", example = "0.0")
+            <#else>
+    @ApiModelProperty(value = "${field.comment}")
+            </#if>
         <#else>
     /**
      * ${field.comment}
      */
         </#if>
     </#if>
-    <#if field.columnType== "STRING">
-    @NotBlank(message = "${field.comment}不能为空")
-    <#elseif field.columnType== "LONG">
-    @NotNull(message = "${field.comment}不能为空")
-    <#elseif field.columnType== "INT">
-    @NotNull(message = "${field.comment}不能为空")
-    <#elseif field.columnType== "DATE">
-    @NotNull(message = "${field.comment}不能为空")
-    <#else>
-    @NotNull(message = "${field.comment}不能为空")
-    </#if>
+<#--    <#if field.columnType== "STRING">-->
+<#--    @NotBlank(message = "${field.comment}不能为空")-->
+<#--    <#elseif field.columnType== "LONG">-->
+<#--    @NotNull(message = "${field.comment}不能为空")-->
+<#--    <#elseif field.columnType== "INT">-->
+<#--    @NotNull(message = "${field.comment}不能为空")-->
+<#--    <#elseif field.columnType== "DATE">-->
+<#--    @NotNull(message = "${field.comment}不能为空")-->
+<#--    <#else>-->
+<#--    @NotNull(message = "${field.comment}不能为空")-->
+<#--    </#if>-->
     private ${field.propertyType} ${field.propertyName};
 </#list>
+
+    @ApiModelProperty(value = "创建开始时间")
+    private Date queryStartDate;
+
+    @ApiModelProperty(value = "创建结束时间")
+    private Date queryEndDate;
 <#------------  END 字段循环遍历  ---------->
 
 <#if !entityLombokModel>
