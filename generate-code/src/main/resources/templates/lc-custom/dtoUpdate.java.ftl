@@ -17,8 +17,8 @@ import javax.validation.constraints.NotNull;
 <#list table.fields as field>
     <#if field.columnType== "DATE">
 import java.util.Date;
+        <#break>
     </#if>
-    <#break>
 </#list>
 <#-------------  END 检测是否存在日期类型  ---------->
 /**
