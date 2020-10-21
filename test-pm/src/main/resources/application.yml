@@ -3,6 +3,16 @@ spring:
     active: dev
   application:
     name: test-pm-service
+  datasource:
+    driverClassName: com.p6spy.engine.spy.P6SpyDriver
+    #mysql8
+    url: jdbc:p6spy:mysql://localhost:3306/user_test?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
+    #mysql5
+    #    url: jdbc:p6spy:mysql://localhost:3306/miguaikan?useUnicode=true&characterEncoding=UTF-8
+    username: root
+    password: 123456
+    validationQuery: select 1
+    testWhileIdle: true
 #mybatis
 mybatis-plus:
   mapper-locations: classpath*:/mysql_mapper/*Mapper.xml
@@ -46,3 +56,4 @@ common:
     props:
       #默认令牌过期时间是1天
       access-token-validity-seconds: 86400
+

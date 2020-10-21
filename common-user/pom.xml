@@ -37,6 +37,10 @@
             <groupId>com.lc</groupId>
             <artifactId>common-redis</artifactId>
         </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
         <!--        <dependency>-->
         <!--            <groupId>com.oracle</groupId>-->
         <!--            <artifactId>ojdbc6</artifactId>-->
