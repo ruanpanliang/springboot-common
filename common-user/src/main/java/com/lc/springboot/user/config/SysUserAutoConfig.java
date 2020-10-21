@@ -38,6 +38,10 @@ public class SysUserAutoConfig implements WebMvcConfigurer {
     @Autowired
     Environment environment;
 
+    /**
+     * 令牌工具类
+     * @return
+     */
     @Bean
     AccessTokenUtil accessTokenUtil() {
         AccessTokenUtil accessTokenUtil = new AccessTokenUtil();
@@ -46,11 +50,19 @@ public class SysUserAutoConfig implements WebMvcConfigurer {
         return accessTokenUtil;
     }
 
+    /**
+     * 加密方式
+     * @return
+     */
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * 对象属性copy工具
+     * @return
+     */
     @Bean
     public ModelMapper modelMapper() {
         ModelMapper modelMapper = new ModelMapper();
@@ -58,6 +70,10 @@ public class SysUserAutoConfig implements WebMvcConfigurer {
         return modelMapper;
     }
 
+    /**
+     * 自定义拦截器
+     * @param registry
+     */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         UserAuthorizeInterceptor userAuthorizeInterceptor =
@@ -68,6 +84,10 @@ public class SysUserAutoConfig implements WebMvcConfigurer {
         registry.addInterceptor(userAuthorizeInterceptor);
     }
 
+    /**
+     * 前端参数转换工具
+     * @param registry
+     */
     @Override
     public void addFormatters(FormatterRegistry registry) {
         // 字符串转时间转换器，用于拦截带有注解@RequestMapping的方法参数
@@ -75,6 +95,10 @@ public class SysUserAutoConfig implements WebMvcConfigurer {
     }
 
 
+    /**
+     * 初始化sql脚本
+     * @return
+     */
     @Bean
     @ConditionalOnMissingBean(UserPluginManager.class)
     public UserPluginManager userPluginManager() {

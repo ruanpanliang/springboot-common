@@ -46,6 +46,7 @@
         <module>common-redis</module>
         <module>common-ftp</module>
         <module>common-sftp</module>
+        <module>common-obs</module>
     </modules>
 
     <dependencyManagement>
