@@ -1,4 +1,4 @@
-package com.lc.springboot.config;
+package com.lc.test.springboot.config;
 
 import com.lc.springboot.common.error.GlobalExceptionTranslator;
 import org.springframework.context.annotation.Configuration;

@@ -1,4 +1,4 @@
-package com.lc.springboot.config;
+package com.lc.test.springboot.config;
 
 import com.lc.springboot.common.async.ContextCopyingDecorator;
 import org.springframework.context.annotation.Bean;

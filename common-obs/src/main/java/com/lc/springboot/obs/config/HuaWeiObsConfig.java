@@ -2,7 +2,9 @@ package com.lc.springboot.obs.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.StringUtils;
 
@@ -20,8 +22,11 @@ public class HuaWeiObsConfig {
     @Autowired
     HuaWeiObsProperties huaWeiObsProperties;
 
-    @Autowired
-    HuaWeiObsUtil huaWeiObsUtil;
+    @Bean
+    @ConditionalOnMissingBean(HuaWeiObsUtil.class)
+    public HuaWeiObsUtil huaWeiObsUtil(){
+        return new HuaWeiObsUtil(huaWeiObsProperties);
+    }
 
     @PostConstruct
     public void checkBucketExists() {
@@ -36,10 +41,10 @@ public class HuaWeiObsConfig {
         }
 
         log.info("检测obs资源的bucket名称是否存在");
-        if (!huaWeiObsUtil.bucketExists(huaWeiObsProperties.getBucketName())) {
+        if (!huaWeiObsUtil().bucketExists(huaWeiObsProperties.getBucketName())) {
             // 创建bucket
             log.info("创建bucket");
-            huaWeiObsUtil.createBucket(huaWeiObsProperties.getBucketName());
+            huaWeiObsUtil().createBucket(huaWeiObsProperties.getBucketName());
         }
     }
 

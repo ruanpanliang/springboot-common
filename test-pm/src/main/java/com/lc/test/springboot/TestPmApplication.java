@@ -1,6 +1,5 @@
-package com.lc.springboot;
+package com.lc.test.springboot;
 
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -13,7 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 
 @SpringBootApplication
-@MapperScan(basePackages = "com.lc.springboot.user.mapper")
+//@EnableUserModel
 public class TestPmApplication {
 
   public static void main(String[] args) {

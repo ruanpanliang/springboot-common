@@ -1,4 +1,4 @@
-package com.lc.springboot; // package com.chinamobile.zj.idc.management.config;
+package com.lc.test.springboot; // package com.chinamobile.zj.idc.management.config;
 
 import com.baomidou.mybatisplus.core.enums.SqlLike;
 import com.lc.springboot.mybatisplus.generatecode.AutoGenerator;

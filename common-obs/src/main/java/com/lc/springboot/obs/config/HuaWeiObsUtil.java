@@ -22,11 +22,13 @@ import java.util.List;
  * @author liangc
  */
 @Slf4j
-@Component
 public class HuaWeiObsUtil {
 
-    @Autowired
-    HuaWeiObsProperties huaWeiObsProperties;
+    private HuaWeiObsProperties huaWeiObsProperties;
+
+    public HuaWeiObsUtil(HuaWeiObsProperties huaWeiObsProperties) {
+        this.huaWeiObsProperties = huaWeiObsProperties;
+    }
 
     /**
      * 客户端操作对象

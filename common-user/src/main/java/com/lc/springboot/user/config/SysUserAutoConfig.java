@@ -8,10 +8,12 @@ import com.lc.springboot.user.handler.sql.SqlHandler;
 import com.lc.springboot.user.interceptor.UserAuthorizeInterceptor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.format.FormatterRegistry;
@@ -27,6 +29,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Configuration
 @EnableConfigurationProperties(UserProperties.class)
+@ComponentScan(basePackages = {"com.lc.springboot"})
+@MapperScan(basePackages = {"com.lc.springboot.user.mapper"})
 public class SysUserAutoConfig implements WebMvcConfigurer {
 
     @Autowired

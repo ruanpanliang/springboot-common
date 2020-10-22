@@ -1,4 +1,4 @@
-package com.lc.springboot.config;
+package com.lc.test.springboot.config;
 
 import com.github.structlog4j.StructLog4J;
 import com.github.structlog4j.json.JsonFormatter;
