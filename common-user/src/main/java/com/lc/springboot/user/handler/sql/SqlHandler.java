@@ -45,7 +45,7 @@ public class SqlHandler {
     private static final Logger log = LoggerFactory.getLogger(SqlHandler.class);
 
     // 数据字典SQL
-    private static final String DICTIONARY_SQL = "SELECT id FROM ${SCHEMA}.sys_user WHERE id=0";
+    private static final String DICTIONARY_SQL = "SELECT id FROM SYS_USER WHERE id=0";
     private static final String MYBATIS_PLUS_SCHEMA_CONFIG = "mybatis-plus.global-config.db-config.schema";
     private static String CURRENT_SCHEMA = null;
     private static Environment environment;
