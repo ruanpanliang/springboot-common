@@ -38,11 +38,11 @@ public class HuaWeiObsUtil {
     @PostConstruct
     public void init() {
         if (StringUtils.isEmpty(huaWeiObsProperties.getEndPoint())) {
-            log.warn("obs的endpoint信息没有做配置，obs功能不能使用哦!");
+            log.warn("Obs endpoint information is not configured, obs function cannot be used !!!");
             return;
         }
 
-        log.info("初始化obsClient类");
+        log.info("Initialize obs Client class");
         ObsConfiguration config = new ObsConfiguration();
         config.setSocketTimeout(30000);
         config.setConnectionTimeout(10000);
@@ -56,7 +56,7 @@ public class HuaWeiObsUtil {
      * @return
      */
     public boolean listBucket() {
-        log.info("开始查询");
+        log.info("Start query");
         ListBucketsRequest request = new ListBucketsRequest();
         request.setQueryLocation(true);
         List<ObsBucket> buckets = obsClient.listBuckets(request);
@@ -91,12 +91,30 @@ public class HuaWeiObsUtil {
     }
 
     /**
+     * 删除所有的附件信息
+     * @param bucketName
+     * @return
+     */
+    public boolean clear(String bucketName) {
+        if (StringUtils.isEmpty(bucketName)) {
+            log.warn("bucketName is empty, Do not delete attachments ！！！");
+            return false;
+        }
+
+        ObjectListing objectListing = obsClient.listObjects(bucketName);
+        List<ObsObject> objects = objectListing.getObjects();
+        objects.forEach(a -> deleteFile(a.getObjectKey()));
+
+        return true;
+    }
+
+    /**
      * 创建桶
      *
      * @throws ObsException 异常
      */
     public void createBucket(String name) throws ObsException {
-        log.info("开始创建桶");
+        log.info("Start creating bucket");
         ObsBucket obsBucket = new ObsBucket();
         obsBucket.setBucketName(name);
         obsClient.createBucket(obsBucket);

@@ -31,19 +31,19 @@ public class HuaWeiObsConfig {
     @PostConstruct
     public void checkBucketExists() {
         if (StringUtils.isEmpty(huaWeiObsProperties.getEndPoint())) {
-            log.warn("obs的endpoint信息没有做配置，obs功能不能使用哦!");
+            log.warn("obs endpoint information is not configured, obs function cannot be used !!!");
             return;
         }
 
         if (StringUtils.isEmpty(huaWeiObsProperties.getBucketName())) {
-            log.error("请先设置obs桶名称，否则obs资源无法使用哦");
+            log.error("Please set the obs bucket name first, otherwise the obs resource cannot be used !!!");
             return;
         }
 
-        log.info("检测obs资源的bucket名称是否存在");
+        log.info("Check whether the bucket name of obs resource exists");
         if (!huaWeiObsUtil().bucketExists(huaWeiObsProperties.getBucketName())) {
             // 创建bucket
-            log.info("创建bucket");
+            log.info("Create bucket");
             huaWeiObsUtil().createBucket(huaWeiObsProperties.getBucketName());
         }
     }
