@@ -46,7 +46,7 @@
         <module>common-redis</module>
         <module>common-ftp</module>
         <module>common-sftp</module>
-        <module>common-obs</module>
+<!--        <module>common-obs</module>-->
     </modules>
 
     <dependencyManagement>
@@ -81,19 +81,19 @@
                 <version>${swagger.bootstrap.ui.version}</version>
             </dependency>
 
-            <!-- Structured logging -->
-            <dependency>
-                <groupId>structlog4j</groupId>
-                <artifactId>structlog4j-api</artifactId>
-                <version>${structlog4j.version}</version>
-            </dependency>
+<!--            &lt;!&ndash; Structured logging &ndash;&gt;-->
+<!--            <dependency>-->
+<!--                <groupId>structlog4j</groupId>-->
+<!--                <artifactId>structlog4j-api</artifactId>-->
+<!--                <version>${structlog4j.version}</version>-->
+<!--            </dependency>-->
 
-            <!-- Optional JSON formatter -->
-            <dependency>
-                <groupId>structlog4j</groupId>
-                <artifactId>structlog4j-json</artifactId>
-                <version>${structlog4j.version}</version>
-            </dependency>
+<!--            &lt;!&ndash; Optional JSON formatter &ndash;&gt;-->
+<!--            <dependency>-->
+<!--                <groupId>structlog4j</groupId>-->
+<!--                <artifactId>structlog4j-json</artifactId>-->
+<!--                <version>${structlog4j.version}</version>-->
+<!--            </dependency>-->
 
             <!--            modelmapper-->
             <dependency>
@@ -232,15 +232,23 @@
             <artifactId>hutool-all</artifactId>
             <version>${cn.hutool.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+        </dependency>
 
-        <dependency>
-            <groupId>structlog4j</groupId>
-            <artifactId>structlog4j-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>structlog4j</groupId>
-            <artifactId>structlog4j-json</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>structlog4j</groupId>-->
+<!--            <artifactId>structlog4j-api</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>structlog4j</groupId>-->
+<!--            <artifactId>structlog4j-json</artifactId>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
