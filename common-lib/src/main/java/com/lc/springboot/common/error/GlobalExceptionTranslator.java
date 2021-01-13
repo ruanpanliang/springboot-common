@@ -92,7 +92,7 @@ public class GlobalExceptionTranslator {
   }
 
   @ExceptionHandler(NoHandlerFoundException.class)
-  @ResponseStatus(code = HttpStatus.NOT_FOUND)
+  @ResponseStatus(HttpStatus.NOT_FOUND)
   public BaseResponse handleError(NoHandlerFoundException e) {
     log.error("404 Not Found", e);
     return BaseResponse.builder().code(ResultCode.NOT_FOUND).message(e.getMessage()).build();
